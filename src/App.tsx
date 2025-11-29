@@ -1,11 +1,10 @@
+import Login from "./pages/Login";
+
 function App() {
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center text-white">
-      <h1 className="text-4xl font-bold text-blue-500">
-        StackSift Frontend is Running! 🚀
-      </h1>
-    </div>
-  )
+    // Later we will add <Routes> here
+    <Login />
+  );
 }
 
-export default App
+export default App;

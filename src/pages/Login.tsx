@@ -1,31 +1,48 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { loginSuccess } from '../redux/action/authAction'; 
 import { FaGoogle, FaLayerGroup } from 'react-icons/fa';
+import {loginUser} from '../services/auth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(''); // Clear previous errors
 
-    // Simulate API call
-    setTimeout(() => {
-        const dummyData = {
-            user: { id: '1', name: 'Dev User', email: email, role: ['USER'] },
-            token: 'fake-jwt-token'
-        };
-        dispatch(loginSuccess(dummyData));
-        setIsLoading(false);
-        alert("Login Successful!"); 
-    }, 1500);
+    try {
+      // 1. Call the Real Backend
+      const data = await loginUser(email, password);
+
+      // 2. Save to Redux (using the real data from DB)
+      // Note: backend sends 'accessToken', redux expects 'token'. Map it here.
+      dispatch(loginSuccess({
+        user: data.user,
+        token: data.accessToken, // Handle both naming cases safely
+        refreshToken: data.refreshToken // Handle both naming cases safely
+      }));
+
+      alert("Login Successful! Welcome " + data.user.name);
+      
+      // Navigate to dashboard 
+      // navigate('/dashboard'); 
+
+    } catch (err: any) {
+      console.error("Login Failed", err);
+      // Show the error message from the backend (e.g., "Invalid credentials")
+      setError(err.response?.data?.message || 'Login failed. Please check backend.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -56,6 +73,11 @@ const Login = () => {
         </div>
 
         {/* Form */}
+        {error && (
+        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 rounded text-red-400 text-sm text-center">
+           {error}
+        </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-5">
           
           <div>

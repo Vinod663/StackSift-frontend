@@ -1,9 +1,12 @@
-import Login from "./pages/Login";
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import AppRouter from './routes'; 
 
 function App() {
   return (
-    // Later we will add <Routes> here
-    <Login />
+    <Provider store={store}>
+       <AppRouter />
+    </Provider>
   );
 }
 

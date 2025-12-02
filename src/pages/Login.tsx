@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { loginSuccess } from '../redux/action/authAction'; 
 import { FaGoogle, FaLayerGroup } from 'react-icons/fa';
 import {loginUser} from '../services/auth';
@@ -12,7 +12,7 @@ const Login = () => {
   const [error, setError] = useState('');
   
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ const Login = () => {
       alert("Login Successful! Welcome " + data.user.name);
       
       // Navigate to dashboard 
-      // navigate('/dashboard'); 
+      navigate('/dashboard'); 
 
     } catch (err: any) {
       console.error("Login Failed", err);

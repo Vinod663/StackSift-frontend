@@ -7,7 +7,7 @@ export interface Website {
   description: string;
   category: string;
   tags: string[];
-  upvotes: number;
+  upvotes: string[];
   views: number;
   approved: boolean;
   addedBy: string;

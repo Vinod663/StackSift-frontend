@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { getWebsites, likeWebsite, approveWebsite, type Website, searchWebsitesAI } from '../services/website';
+import { getWebsites, likeWebsite, approveWebsite, type Website, searchWebsitesAI, viewWebsite } from '../services/website';
 import WebsiteCard from '../components/WebsiteCard';
 
 const Dashboard = () => {
@@ -63,11 +63,15 @@ const Dashboard = () => {
   // 3. Handle Like Action
   const handleLike = async (id: string) => {
     try {
-        // Optimistic UI Update (Update screen before server replies)
+        // 1. Call the API first
+        const response = await likeWebsite(id); // Returns { message: "Liked", data: updatedWebsite }
+        
+        // 2. Update the state with the REAL data from the server
+        // This automatically handles the Array length and toggling!
         setWebsites(prev => prev.map(site => 
-            site._id === id ? { ...site, upvotes: site.upvotes + 1 } : site
+            site._id === id ? response.data : site
         ));
-        await likeWebsite(id);
+        
     } catch (error) {
         console.error("Like failed", error);
     }
@@ -82,6 +86,20 @@ const Dashboard = () => {
     } catch (error) {
         alert("Approval failed (Check console)");
         console.error(error);
+    }
+  };
+
+  const handleView = async (id: string) => {
+    try {
+        // Fire API call (Fire-and-forget: we don't wait for it to finish before opening the link)
+        const response = await viewWebsite(id);
+        
+        // Update state to show new view count immediately
+        setWebsites(prev => prev.map(site => 
+            site._id === id ? response.data : site
+        ));
+    } catch (error) {
+        console.error("View count failed", error);
     }
   };
 
@@ -132,6 +150,8 @@ const Dashboard = () => {
                             data={site} 
                             onLike={handleLike}
                             onApprove={handleApprove}
+                            onView={handleView}
+                            isAi={isAiResult}
                         />
                     ))}
                 </div>

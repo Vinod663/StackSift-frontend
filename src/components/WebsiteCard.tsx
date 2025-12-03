@@ -7,11 +7,16 @@ interface CardProps {
   data: Website;
   onLike: (id: string) => void;
   onApprove: (id: string) => void;
+  onView: (id: string) => void;
+  isAi?: boolean;
 }
 
-const WebsiteCard = ({ data, onLike, onApprove }: CardProps) => {
+const WebsiteCard = ({ data, onLike, onApprove, onView, isAi }: CardProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const isAdmin = user?.role.includes('ADMIN');
+  const isAdmin = Boolean(user?.role?.includes('ADMIN'));
+  const likeCount = Array.isArray(data.upvotes) ? data.upvotes.length : data.upvotes;
+  const uid = user?.id;
+  const isLiked = Array.isArray(data.upvotes) && typeof uid === 'string' && data.upvotes.includes(uid);
 
   // 1. Generate Automated Screenshot URL
   // We use WordPress mShots API (Free & Fast)
@@ -70,11 +75,14 @@ const WebsiteCard = ({ data, onLike, onApprove }: CardProps) => {
             {/* Left: Stats */}
             <div className="flex items-center gap-4 text-sm text-gray-500">
                 <button 
-                    onClick={() => onLike(data._id)}
-                    className="flex items-center gap-1 hover:text-red-400 transition-colors group/like"
-                >
-                    <FaHeart className={`group-hover/like:scale-110 transition-transform ${data.upvotes > 0 ? 'text-red-500' : ''}`} />
-                    <span>{data.upvotes}</span>
+                  onClick={() => !isAi && onLike(data._id)} // Disable click if AI
+                  disabled={isAi}
+                  className={`flex items-center gap-1 transition-colors group/like ${
+                     isAi ? 'opacity-50 cursor-not-allowed' : (isLiked ? 'text-red-500' : 'hover:text-red-400')
+                  }`}
+              >
+                  <FaHeart />
+                  <span>{isAi ? '-' : likeCount}</span>
                 </button>
                 <div className="flex items-center gap-1">
                     <FaEye />
@@ -101,6 +109,7 @@ const WebsiteCard = ({ data, onLike, onApprove }: CardProps) => {
                     href={data.url} 
                     target="_blank" 
                     rel="noreferrer"
+                    onClick={() => !isAi && onView(data._id)}
                     className="flex items-center gap-2 bg-brand-primary hover:bg-brand-primary/90 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all shadow-lg shadow-brand-primary/20"
                 >
                     Visit <FaExternalLinkAlt />

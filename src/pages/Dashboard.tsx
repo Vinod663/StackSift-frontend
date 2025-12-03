@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { getWebsites, likeWebsite, approveWebsite, type Website, searchWebsitesAI, viewWebsite } from '../services/website';
+import { getWebsites, likeWebsite, approveWebsite, viewWebsite, searchWebsitesAI, type Website } from '../services/website';
 import WebsiteCard from '../components/WebsiteCard';
 
 const Dashboard = () => {
@@ -9,37 +9,43 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [isAiResult, setIsAiResult] = useState(false);
 
+  // Pagination State
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // 1. Fetch Data Function
   const fetchData = async () => {
     setLoading(true);
-    setIsAiResult(false); // Reset AI flag on new search
+    setIsAiResult(false); // Reset AI flag
     
     try {
-      // 1. Try Database Search first
-      const data = await getWebsites(search);
+      // Pass page number to the API
+      const data = await getWebsites(search, '', page, 12);
       
       if (data.websites.length > 0) {
         setWebsites(data.websites);
-      } else if (search.length > 3) {
-        // 2. If DB empty & search is long enough -> Ask AI!
+        setTotalPages(data.totalPages || 1);
+      } else if (search.length > 3 && page === 1) {
+        // Only ask AI if we are on Page 1 and database is empty
         console.log("Database empty, asking AI...");
         const aiData = await searchWebsitesAI(search);
         
-        // Add a fake _id so React keys work
+        // Add fake IDs for React keys
         const aiWebsites = aiData.map((site: any, index: number) => ({
             ...site,
             _id: `ai-${index}`,
             approved: false,
-            upvotes: 0,
+            upvotes: [],
             views: 0,
             addedBy: 'AI_BOT'
         }));
         
         setWebsites(aiWebsites);
-        setIsAiResult(true); // Flag this so we can show a special UI
+        setTotalPages(1); // AI results are always 1 page
+        setIsAiResult(true); 
       } else {
         setWebsites([]);
+        setTotalPages(1);
       }
 
     } catch (error) {
@@ -49,52 +55,36 @@ const Dashboard = () => {
     }
   };
 
-  // 2. Fetch on Mount & When Search Changes
+  // 2. Trigger fetch when Search OR Page changes
   useEffect(() => {
-    // Debounce search (wait 500ms after typing stops)
     const timer = setTimeout(() => {
         fetchData();
     }, 500);
-
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [search, page]); // Dependency array includes 'page'
 
+  // Reset page to 1 if user types a new search
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearch(e.target.value);
+      setPage(1); 
+  };
 
   // 3. Handle Like Action
   const handleLike = async (id: string) => {
     try {
-        // 1. Call the API first
-        const response = await likeWebsite(id); // Returns { message: "Liked", data: updatedWebsite }
-        
-        // 2. Update the state with the REAL data from the server
-        // This automatically handles the Array length and toggling!
+        const response = await likeWebsite(id);
         setWebsites(prev => prev.map(site => 
             site._id === id ? response.data : site
         ));
-        
     } catch (error) {
         console.error("Like failed", error);
     }
   };
 
-  // 4. Handle Approve Action (Admin)
-  const handleApprove = async (id: string) => {
-    try {
-        await approveWebsite(id);
-        alert("Website Approved!");
-        fetchData(); // Refresh list
-    } catch (error) {
-        alert("Approval failed (Check console)");
-        console.error(error);
-    }
-  };
-
+  // 4. Handle View Action
   const handleView = async (id: string) => {
     try {
-        // Fire API call (Fire-and-forget: we don't wait for it to finish before opening the link)
         const response = await viewWebsite(id);
-        
-        // Update state to show new view count immediately
         setWebsites(prev => prev.map(site => 
             site._id === id ? response.data : site
         ));
@@ -103,8 +93,19 @@ const Dashboard = () => {
     }
   };
 
+  // 5. Handle Approve Action (Admin)
+  const handleApprove = async (id: string) => {
+    try {
+        await approveWebsite(id);
+        alert("Website Approved!");
+        fetchData(); 
+    } catch (error) {
+        alert("Approval failed");
+    }
+  };
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pb-10">
       
       {/* Header & Search */}
       <div className="flex flex-col md:flex-row justify-between items-end gap-4">
@@ -118,19 +119,20 @@ const Dashboard = () => {
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
             <input 
                 type="text" 
-                placeholder="Search tools, tags, categories..." 
+                placeholder="Search tools..." 
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={handleSearchChange}
                 className="w-full bg-brand-dark/50 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-brand-primary transition-colors"
             />
         </div>
       </div>
+
       {/* AI Result Notice */}
       {isAiResult && (
-      <div className="bg-brand-primary/10 border border-brand-primary/30 text-brand-primary px-4 py-2 rounded-lg mb-6 flex items-center gap-2">
-        <span>✨ No local results found. Here are some <b>AI Suggestions</b> for you:</span>
-      </div>
-    )}
+        <div className="bg-brand-primary/10 border border-brand-primary/30 text-brand-primary px-4 py-2 rounded-lg flex items-center gap-2">
+            <span>✨ No local results found. Here are some <b>AI Suggestions</b> for you:</span>
+        </div>
+      )}
 
       {/* Grid Content */}
       {loading ? (
@@ -140,7 +142,6 @@ const Dashboard = () => {
             {websites.length === 0 ? (
                 <div className="text-center py-20">
                     <p className="text-gray-400 mb-2">No tools found matching "{search}"</p>
-                    {/* Placeholder for AI Search Fallback later */}
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -157,6 +158,32 @@ const Dashboard = () => {
                 </div>
             )}
         </>
+      )}
+
+      {/* --- PAGINATION BUTTONS --- */}
+      {/* Only show if NOT loading, NOT AI results, and we have websites */}
+      {!loading && !isAiResult && websites.length > 0 && (
+          <div className="flex justify-center items-center gap-4 mt-8">
+            <button
+                onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+                disabled={page === 1}
+                className="px-4 py-2 bg-brand-primary/10 text-brand-primary rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-brand-primary/20 transition-colors"
+            >
+                Previous
+            </button>
+            
+            <span className="text-gray-400 text-sm">
+                Page {page} of {totalPages}
+            </span>
+
+            <button
+                onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={page === totalPages}
+                className="px-4 py-2 bg-brand-primary/10 text-brand-primary rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-brand-primary/20 transition-colors"
+            >
+                Next
+            </button>
+          </div>
       )}
     </div>
   );

@@ -1,19 +1,47 @@
 import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import { getWebsites, likeWebsite, approveWebsite, type Website } from '../services/website';
+import { getWebsites, likeWebsite, approveWebsite, type Website, searchWebsitesAI } from '../services/website';
 import WebsiteCard from '../components/WebsiteCard';
 
 const Dashboard = () => {
   const [websites, setWebsites] = useState<Website[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isAiResult, setIsAiResult] = useState(false);
+
 
   // 1. Fetch Data Function
   const fetchData = async () => {
     setLoading(true);
+    setIsAiResult(false); // Reset AI flag on new search
+    
     try {
+      // 1. Try Database Search first
       const data = await getWebsites(search);
-      setWebsites(data.websites);
+      
+      if (data.websites.length > 0) {
+        setWebsites(data.websites);
+      } else if (search.length > 3) {
+        // 2. If DB empty & search is long enough -> Ask AI!
+        console.log("Database empty, asking AI...");
+        const aiData = await searchWebsitesAI(search);
+        
+        // Add a fake _id so React keys work
+        const aiWebsites = aiData.map((site: any, index: number) => ({
+            ...site,
+            _id: `ai-${index}`,
+            approved: false,
+            upvotes: 0,
+            views: 0,
+            addedBy: 'AI_BOT'
+        }));
+        
+        setWebsites(aiWebsites);
+        setIsAiResult(true); // Flag this so we can show a special UI
+      } else {
+        setWebsites([]);
+      }
+
     } catch (error) {
       console.error("Failed to fetch websites", error);
     } finally {
@@ -79,6 +107,12 @@ const Dashboard = () => {
             />
         </div>
       </div>
+      {/* AI Result Notice */}
+      {isAiResult && (
+      <div className="bg-brand-primary/10 border border-brand-primary/30 text-brand-primary px-4 py-2 rounded-lg mb-6 flex items-center gap-2">
+        <span>✨ No local results found. Here are some <b>AI Suggestions</b> for you:</span>
+      </div>
+    )}
 
       {/* Grid Content */}
       {loading ? (

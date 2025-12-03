@@ -44,3 +44,9 @@ export const approveWebsite = async (id: string) => {
   const response = await api.put(`/post/${id}/approve`); 
   return response.data;
 };
+
+// 5. Call AI Search
+export const searchWebsitesAI = async (query: string) => {
+  const response = await api.post('/post/search-ai', { query });
+  return response.data.websites; // Returns array of tools
+};

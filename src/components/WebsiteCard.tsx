@@ -13,76 +13,99 @@ const WebsiteCard = ({ data, onLike, onApprove }: CardProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
   const isAdmin = user?.role.includes('ADMIN');
 
+  // 1. Generate Automated Screenshot URL
+  // We use WordPress mShots API (Free & Fast)
+  const screenshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(data.url)}?w=800&h=500`;
+
   return (
-    <div className="group relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:border-brand-primary/30">
+    <div className="group flex flex-col bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-all duration-300 hover:border-brand-primary/30 hover:-translate-y-1">
       
-      {/* 1. Category Badge */}
-      <div className="absolute top-4 right-4">
-        <span className="text-xs font-bold px-3 py-1 rounded-full bg-brand-primary/20 text-brand-primary border border-brand-primary/20">
-          {data.category}
-        </span>
-      </div>
-
-      {/* 2. Content */}
-      <div className="mb-4">
-        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-primary transition-colors">
-            {data.title}
-        </h3>
-        <p className="text-gray-400 text-sm line-clamp-2 h-10">
-            {data.description}
-        </p>
-      </div>
-
-      {/* 3. Tags */}
-      <div className="flex flex-wrap gap-2 mb-6">
-        {data.tags.slice(0, 3).map((tag) => (
-            <span key={tag} className="text-xs text-gray-500 bg-brand-dark px-2 py-1 rounded border border-white/5">
-                #{tag}
-            </span>
-        ))}
-      </div>
-
-      {/* 4. Action Bar */}
-      <div className="flex items-center justify-between pt-4 border-t border-white/10">
+      {/* --- IMAGE SECTION --- */}
+      <div className="relative h-48 w-full overflow-hidden bg-brand-dark/50">
+        {/* The Screenshot */}
+        <img 
+            src={screenshotUrl} 
+            alt={`${data.title} preview`} 
+            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+            loading="lazy"
+        />
         
-        {/* Left: Stats */}
-        <div className="flex items-center gap-4 text-sm text-gray-500">
-            <button 
-                onClick={() => onLike(data._id)}
-                className="flex items-center gap-1 hover:text-red-400 transition-colors group/like"
-            >
-                <FaHeart className="group-hover/like:scale-110 transition-transform" />
-                <span>{data.upvotes}</span>
-            </button>
-            <div className="flex items-center gap-1">
-                <FaEye />
-                <span>{data.views}</span>
-            </div>
+        {/* Floating Category Badge */}
+        <div className="absolute top-3 right-3">
+            <span className="text-xs font-bold px-3 py-1 rounded-full bg-brand-dark/80 text-brand-primary border border-brand-primary/20 backdrop-blur-md shadow-lg">
+            {data.category}
+            </span>
         </div>
 
-        {/* Right: Actions */}
-        <div className="flex items-center gap-2">
-            
-            {/* ADMIN ONLY: Approve Button */}
-            {isAdmin && !data.approved && (
-                <button 
-                    onClick={() => onApprove(data._id)}
-                    className="p-2 text-green-500 hover:bg-green-500/20 rounded-lg transition-colors"
-                    title="Approve Submission"
-                >
-                    <FaCheckCircle />
-                </button>
-            )}
+        {/* Floating Domain Name (Optional cool touch) */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-brand-dark to-transparent p-4 pt-10">
+             {/* This gradient makes the text below readable */}
+        </div>
+      </div>
 
-            {/* Visit Link */}
-            <a 
-                href={data.url} 
-                target="_blank" 
-                rel="noreferrer"
-                className="flex items-center gap-2 bg-brand-primary hover:bg-brand-primary/90 text-white text-xs font-bold px-3 py-2 rounded-lg transition-all"
-            >
-                Visit <FaExternalLinkAlt />
-            </a>
+      {/* --- CONTENT SECTION --- */}
+      <div className="p-5 flex flex-col flex-grow">
+        
+        <div className="mb-4 flex-grow">
+            <h3 className="text-xl font-bold text-white mb-2 group-hover:text-brand-primary transition-colors line-clamp-1">
+                {data.title}
+            </h3>
+            <p className="text-gray-400 text-sm line-clamp-2 h-10">
+                {data.description}
+            </p>
+        </div>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mb-6">
+            {data.tags.slice(0, 3).map((tag) => (
+                <span key={tag} className="text-xs text-gray-500 bg-brand-dark px-2 py-1 rounded border border-white/5 group-hover:border-white/10 transition-colors">
+                    #{tag}
+                </span>
+            ))}
+        </div>
+
+        {/* Action Bar */}
+        <div className="flex items-center justify-between pt-4 border-t border-white/10 mt-auto">
+            
+            {/* Left: Stats */}
+            <div className="flex items-center gap-4 text-sm text-gray-500">
+                <button 
+                    onClick={() => onLike(data._id)}
+                    className="flex items-center gap-1 hover:text-red-400 transition-colors group/like"
+                >
+                    <FaHeart className={`group-hover/like:scale-110 transition-transform ${data.upvotes > 0 ? 'text-red-500' : ''}`} />
+                    <span>{data.upvotes}</span>
+                </button>
+                <div className="flex items-center gap-1">
+                    <FaEye />
+                    <span>{data.views}</span>
+                </div>
+            </div>
+
+            {/* Right: Actions */}
+            <div className="flex items-center gap-2">
+                
+                {/* ADMIN: Approve */}
+                {isAdmin && !data.approved && (
+                    <button 
+                        onClick={() => onApprove(data._id)}
+                        className="p-2 text-green-500 hover:bg-green-500/20 rounded-lg transition-colors"
+                        title="Approve Submission"
+                    >
+                        <FaCheckCircle />
+                    </button>
+                )}
+
+                {/* Visit */}
+                <a 
+                    href={data.url} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center gap-2 bg-brand-primary hover:bg-brand-primary/90 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all shadow-lg shadow-brand-primary/20"
+                >
+                    Visit <FaExternalLinkAlt />
+                </a>
+            </div>
         </div>
       </div>
     </div>

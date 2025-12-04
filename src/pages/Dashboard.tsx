@@ -3,6 +3,16 @@ import { FaSearch } from 'react-icons/fa';
 import { getWebsites, likeWebsite, approveWebsite, viewWebsite, searchWebsitesAI, type Website } from '../services/website';
 import WebsiteCard from '../components/WebsiteCard';
 
+
+// Helper to clean URLs for comparison
+const normalizeUrl = (url: string) => {
+    return url
+        .toLowerCase()
+        .replace(/^(?:https?:\/\/)?(?:www\.)?/i, "") // Remove protocol & www
+        .replace(/\/$/, "")                           // Remove trailing slash
+        .trim();
+};
+
 const Dashboard = () => {
   const [websites, setWebsites] = useState<Website[]>([]);
   const [search, setSearch] = useState('');
@@ -52,11 +62,22 @@ const Dashboard = () => {
             views: 0,
             addedBy: 'AI_BOT'
         }));
+        
 
         // Filter Duplicates (Don't show duplicates if DB already has them)
-        const uniqueAiSites = aiWebsites.filter((aiSite: any) => 
-            !mixedResults.some(dbSite => dbSite.url === aiSite.url)
-        );
+        const uniqueAiSites = aiWebsites.filter((aiSite: any) => {
+            // 1. Clean both URLs
+            const aiUrl = normalizeUrl(aiSite.url);
+            
+            // 2. Check if ANY database site matches this URL OR Title
+            const existsInDb = mixedResults.some(dbSite => {
+                const dbUrl = normalizeUrl(dbSite.url);
+                const titleMatch = dbSite.title.toLowerCase() === aiSite.title.toLowerCase();
+                return dbUrl === aiUrl || titleMatch;
+            });
+
+            return !existsInDb; // Only keep if it does NOT exist
+        });
 
         //show always only 9 results
         const limitedAiSites = uniqueAiSites.slice(0, needed);

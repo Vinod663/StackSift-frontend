@@ -38,7 +38,7 @@ const WebsiteCard = ({ data, onLike, onApprove, onView, isAi }: CardProps) => {
         {/* Floating Category Badge */}
         <div className="absolute top-3 right-3">
             <span className="text-xs font-bold px-3 py-1 rounded-full bg-brand-dark/80 text-brand-primary border border-brand-primary/20 backdrop-blur-md shadow-lg">
-            {data.category}
+            {isAi ? data.category + ' (✨AI Suggestion)' : data.category}
             </span>
         </div>
 

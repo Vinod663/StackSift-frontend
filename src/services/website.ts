@@ -21,7 +21,7 @@ interface WebsiteResponse {
 }
 
 // 1. Get All Websites (with Search & Filter)
-export const getWebsites = async (search = '', category = '', page = 1, limit = 12) => {
+export const getWebsites = async (search = '', category = '', page = 1, limit = 9) => {
   // Pass search params to the backend
   const response = await api.get<WebsiteResponse>(`/post?search=${search}&category=${category}&page=${page}&limit=${limit}`);
   return response.data;

@@ -20,7 +20,7 @@ const Dashboard = () => {
     
     try {
       // Pass page number to the API
-      const data = await getWebsites(search, '', page, 12);
+      const data = await getWebsites(search, '', page, 9);
       
       if (data.websites.length > 0) {
         setWebsites(data.websites);

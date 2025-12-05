@@ -1,4 +1,4 @@
-import { FaGithub, FaTwitter, FaLinkedin, FaLayerGroup, FaHeart } from 'react-icons/fa';
+import { FaGithub, FaTwitter, FaLinkedin, FaLayerGroup } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -66,9 +66,9 @@ const Footer = () => {
             </p>
             
             <div className="flex items-center gap-6">
-                <a href="#" className="text-gray-400 hover:text-white transition-transform hover:-translate-y-1"><FaGithub size={20} /></a>
-                <a href="#" className="text-gray-400 hover:text-blue-400 transition-transform hover:-translate-y-1"><FaTwitter size={20} /></a>
-                <a href="#" className="text-gray-400 hover:text-blue-600 transition-transform hover:-translate-y-1"><FaLinkedin size={20} /></a>
+                <a href="#" className="text-gray-400 hover:text-white transition-transform hover:-translate-y-1" title='Github'><FaGithub size={20} /></a>
+                <a href="#" className="text-gray-400 hover:text-blue-400 transition-transform hover:-translate-y-1" title='Twitter'><FaTwitter size={20} /></a>
+                <a href="#" className="text-gray-400 hover:text-blue-600 transition-transform hover:-translate-y-1" title='LinkedIn'><FaLinkedin size={20} /></a>
             </div>
         </div>
       </div>

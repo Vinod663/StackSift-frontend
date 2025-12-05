@@ -14,6 +14,14 @@ const Dashboard = lazy(() => import('../pages/Dashboard'));
 
 const SubmitPage = lazy(() => import('../pages/Dashboard')); 
 
+
+const Placeholder = ({ title }: { title: string }) => (
+  <div className="text-center py-20 text-gray-400">
+    <h1 className="text-3xl text-white font-bold mb-4">{title}</h1>
+    <p>This feature is coming soon!</p>
+  </div>
+);
+
 export default function AppRouter() {
     const { isAuthenticated } = useSelector((state: RootState) => state.auth);
 
@@ -39,6 +47,11 @@ export default function AppRouter() {
                         
                         <Route path="/dashboard" element={<Dashboard />} /> //http://localhost:5173/dashboard
                         <Route path="/submit" element={<SubmitPage />} />   //http://localhost:5173/submit
+
+
+                        <Route path="/help" element={<Placeholder title="Documentation" />} />
+                        <Route path="/contact" element={<Placeholder title="Contact Support" />} />
+                        <Route path="/bookmarks" element={<Placeholder title="My Collections" />} />
                         
                         {/* Example of Role-Based Route (Admin) */}
                         <Route 

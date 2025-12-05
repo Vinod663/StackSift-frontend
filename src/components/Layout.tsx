@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/action/authAction';
 import { type RootState } from '../redux/store';
 import { FaLayerGroup, FaPlus, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
+import Footer from './Footer';
 
 const Layout = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -62,6 +63,9 @@ const Layout = () => {
       <main className="p-6 max-w-7xl mx-auto">
         <Outlet />
       </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

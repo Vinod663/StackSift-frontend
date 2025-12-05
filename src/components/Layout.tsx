@@ -94,19 +94,29 @@ const Layout = () => {
                 <div className="h-8 w-px bg-white/10 mx-1"></div>
 
                 {/* Profile Section */}
-                <div className="flex items-center gap-3 pl-2">
+                {/* Profile Dropdown (Now Clickable) */}
+                <Link 
+                    to="/profile" 
+                    className="flex items-center gap-3 pl-2 hover:bg-white/5 p-2 rounded-xl transition-all cursor-pointer group"
+                    title="Edit Profile"
+                >
                     <div className="text-right hidden lg:block">
-                        <p className="text-sm font-medium text-white leading-none">{user?.name}</p>
-                        <p className="text-[10px] text-gray-500 uppercase font-bold mt-1 tracking-wider">{user?.role[0]}</p>
+                        <p className="text-sm font-medium text-white leading-none group-hover:text-brand-primary transition-colors">
+                            {user?.name}
+                        </p>
+                        {/* <p className="text-sm text-gray-500 uppercase font-bold mt-1 tracking-wider text-[10px]">
+                            {user?.role[0]}
+                        </p> */}
                     </div>
-                    <div className="w-10 h-10 rounded-full bg-brand-dark border border-white/10 flex items-center justify-center text-gray-400 overflow-hidden shadow-sm">
+                    
+                    <div className="w-10 h-10 rounded-full bg-brand-dark border border-white/10 flex items-center justify-center text-gray-400 overflow-hidden shadow-sm group-hover:border-brand-primary/50 transition-colors">
                         {user?.avatarUrl ? (
                             <img src={user.avatarUrl} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
-                            <FaUserCircle className="text-2xl" />
+                            <FaUserCircle className="text-2xl group-hover:text-white transition-colors" />
                         )}
                     </div>
-                </div>
+                </Link>
 
                 {/* Logout */}
                 <button 

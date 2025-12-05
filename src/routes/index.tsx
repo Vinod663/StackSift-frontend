@@ -52,6 +52,7 @@ export default function AppRouter() {
                         <Route path="/help" element={<Placeholder title="Documentation" />} />
                         <Route path="/contact" element={<Placeholder title="Contact Support" />} />
                         <Route path="/bookmarks" element={<Placeholder title="My Collections" />} />
+                        <Route path="/profile" element={<Placeholder title="User Profile" />} />
                         
                         {/* Example of Role-Based Route (Admin) */}
                         <Route 

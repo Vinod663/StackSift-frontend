@@ -31,7 +31,7 @@ const Dashboard = () => {
     
     try {
       // A. Fetch DB Data (Limit 9 per page)
-      const data = await getWebsites(search, '', page, 9);
+      const data = await getWebsites(search, '', page, 9, 'true');
       let mixedResults = data.websites;
       
       // Update pagination info from backend

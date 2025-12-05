@@ -9,7 +9,7 @@ import Layout from "../components/Layout";
 const Login = lazy(() => import('../pages/Login'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
 
-
+const AdminDashboard = lazy(() => import('../pages/AdminDashboard'));
 
 
 const SubmitPage = lazy(() => import('../pages/Dashboard')); 
@@ -43,6 +43,15 @@ export default function AppRouter() {
                     {/* --- PROTECTED ROUTES --- */}
                     {/* Wrapped in Layout (Navbar) & PrivateRoute (Security) */}
                     <Route element={<PrivateRoute><Layout /></PrivateRoute>}>
+
+                        <Route 
+                            path="/admin" 
+                            element={
+                                <PrivateRoute allowedRoles={['ADMIN']}>
+                                    <AdminDashboard /> 
+                                </PrivateRoute>
+                            } 
+                        />
                         
                         
                         <Route path="/dashboard" element={<Dashboard />} /> //http://localhost:5173/dashboard

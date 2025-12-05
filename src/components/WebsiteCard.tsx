@@ -1,4 +1,4 @@
-import { FaExternalLinkAlt, FaHeart, FaCheckCircle, FaEye } from 'react-icons/fa';
+import { FaExternalLinkAlt, FaHeart, FaCheckCircle, FaEye, FaTrash, FaEdit } from 'react-icons/fa';
 import { type Website } from '../services/website';
 import { useSelector } from 'react-redux';
 import { type RootState } from '../redux/store';
@@ -8,10 +8,12 @@ interface CardProps {
   onLike: (id: string) => void;
   onApprove: (id: string) => void;
   onView: (id: string) => void;
+  onDelete?: (id: string) => void;
+  onEdit?: (id: string) => void;
   isAi?: boolean;
 }
 
-const WebsiteCard = ({ data, onLike, onApprove, onView, isAi }: CardProps) => {
+const WebsiteCard = ({ data, onLike, onApprove, onView, onDelete, onEdit, isAi }: CardProps) => {
   const { user } = useSelector((state: RootState) => state.auth);
   const isAdmin = Boolean(user?.role?.includes('ADMIN'));
   const likeCount = Array.isArray(data.upvotes) ? data.upvotes.length : data.upvotes;
@@ -98,9 +100,31 @@ const WebsiteCard = ({ data, onLike, onApprove, onView, isAi }: CardProps) => {
                     <button 
                         onClick={() => onApprove(data._id)}
                         className="p-2 text-green-500 hover:bg-green-500/20 rounded-lg transition-colors"
-                        title="Approve Submission"
+                        title="Approve"
                     >
                         <FaCheckCircle />
+                    </button>
+                )}
+
+                {/* ADMIN: Edit (New) */}
+                {isAdmin && onEdit && (
+                    <button 
+                        onClick={() => onEdit(data._id)}
+                        className="p-2 text-blue-400 hover:bg-blue-400/20 rounded-lg transition-colors"
+                        title="Edit"
+                    >
+                        <FaEdit />
+                    </button>
+                )}
+
+                {/* ADMIN: Delete (New) */}
+                {isAdmin && onDelete && (
+                    <button 
+                        onClick={() => onDelete(data._id)}
+                        className="p-2 text-red-500 hover:bg-red-500/20 rounded-lg transition-colors"
+                        title="Delete"
+                    >
+                        <FaTrash />
                     </button>
                 )}
 

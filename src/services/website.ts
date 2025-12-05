@@ -21,9 +21,15 @@ interface WebsiteResponse {
 }
 
 // 1. Get All Websites (with Search & Filter)
-export const getWebsites = async (search = '', category = '', page = 1, limit = 9) => {
+export const getWebsites = async (search = '', category = '', page = 1, limit = 9, approved?: string) => {
   // Pass search params to the backend
-  const response = await api.get<WebsiteResponse>(`/post?search=${search}&category=${category}&page=${page}&limit=${limit}`);
+  const queryApproved = approved ? `&approved=${approved}` : '';
+  const response = await api.get<WebsiteResponse>(`/post?search=${search}&category=${category}&page=${page}&limit=${limit}${queryApproved}`);
+  return response.data;
+};
+
+export const deleteWebsite = async (id: string) => {
+  const response = await api.delete(`/post/${id}`);
   return response.data;
 };
 
@@ -42,6 +48,12 @@ export const viewWebsite = async (id: string) => {
 // 4. (Admin Only) Approve Website
 export const approveWebsite = async (id: string) => {
   const response = await api.put(`/post/${id}/approve`); 
+  return response.data;
+};
+
+// Update Website Details
+export const updateWebsiteDetails = async (id: string, data: Partial<Website>) => {
+  const response = await api.put(`/post/${id}`, data);
   return response.data;
 };
 

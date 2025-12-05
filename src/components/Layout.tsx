@@ -85,7 +85,7 @@ const Layout = () => {
                                 {user?.name || "User"}
                             </p>
                             <p className="text-[10px] text-gray-500 uppercase font-bold mt-1 tracking-wider text-right">
-                                {user?.role ? user.role[0] : "GUEST"}
+                                {/* {user?.role ? user.role[0] : "GUEST"} */}
                             </p>
                         </div>
                         

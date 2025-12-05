@@ -145,6 +145,17 @@ const Dashboard = () => {
     }
   };
 
+
+  const quickSearches = [
+    "AI writer", "background remover", "video editor", 
+    "code assistant", "chatbot", "image generator"
+  ];
+
+  const handleQuickSearch = (term: string) => {
+    setSearch(term);
+    setPage(1); // Reset pagination
+  };
+
   return (
     <div className="space-y-8 pb-10">
       
@@ -166,6 +177,18 @@ const Dashboard = () => {
                 className="w-full bg-brand-dark/50 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-brand-primary transition-colors"
             />
         </div>
+        {/* NEW: Quick Suggestion Tags */}
+            <div className="flex flex-wrap gap-2">
+                {quickSearches.map((term) => (
+                    <button
+                        key={term}
+                        onClick={() => handleQuickSearch(term)}
+                        className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded-md bg-white/5 text-gray-400 hover:bg-brand-primary/20 hover:text-brand-primary transition-all border border-white/5"
+                    >
+                        {term}
+                    </button>
+                ))}
+            </div>
       </div>
 
       {/* Grid Content */}

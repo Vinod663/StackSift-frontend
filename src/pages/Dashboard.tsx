@@ -1,88 +1,89 @@
 import { useEffect, useState } from 'react';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaSpinner } from 'react-icons/fa'; // Added FaSpinner for better loading UI
 import { getWebsites, likeWebsite, approveWebsite, viewWebsite, searchWebsitesAI, type Website } from '../services/website';
 import WebsiteCard from '../components/WebsiteCard';
-
+import { getCollections } from '../services/collection'; // 1. Import this
 
 // Helper to clean URLs for comparison
 const normalizeUrl = (url: string) => {
     return url
         .toLowerCase()
-        .replace(/^(?:https?:\/\/)?(?:www\.)?/i, "") // Remove protocol & www
-        .replace(/\/$/, "")                           // Remove trailing slash
+        .replace(/^(?:https?:\/\/)?(?:www\.)?/i, "") 
+        .replace(/\/$/, "")                   
         .trim();
 };
 
 const Dashboard = () => {
   const [websites, setWebsites] = useState<Website[]>([]);
+  
+  // 2. NEW STATE: Track saved IDs
+  const [savedWebsiteIds, setSavedWebsiteIds] = useState<Set<string>>(new Set());
+  
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [aiLoading, setAiLoading] = useState(false); // Track AI loading separately
+  const [aiLoading, setAiLoading] = useState(false); 
 
   // Pagination State
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [slotsLeft, setSlotsLeft] = useState(0);
 
-  // 1. Fetch Data Function (The Brain)
+  // 3. UPDATED Fetch Data Function
   const fetchData = async () => {
     setLoading(true);
     setAiLoading(false);
     
     try {
-      // A. Fetch DB Data (Limit 9 per page)
-      const data = await getWebsites(search, '', page, 9, 'true');
-      let mixedResults = data.websites;
-      
-      // Update pagination info from backend
-      setTotalPages(data.totalPages || 1);
+      // --- A. Parallel Fetch: Get Websites AND User Collections ---
+      const [websiteData, collectionData] = await Promise.all([
+          getWebsites(search, '', page, 9, 'true'),
+          getCollections()
+      ]);
 
-      // B. HYBRID SEARCH LOGIC:
-      // Only ask AI if we are on Page 1, have a search term, and results are scarce (< 9)
+      // --- B. Process Collections (Extract IDs) ---
+      // We map through all folders, get the website IDs, and flatten them into one Set
+      const allSavedIds = new Set(
+        collectionData.flatMap(col => 
+            col.websites.map(w => typeof w === 'string' ? w : w._id)
+        )
+      );
+      setSavedWebsiteIds(allSavedIds);
+
+      // --- C. Process Websites (Existing Logic) ---
+      let mixedResults = websiteData.websites;
+      setTotalPages(websiteData.totalPages || 1);
+
+      // --- D. HYBRID SEARCH LOGIC (Existing AI Logic) ---
       if (page === 1 && search.length > 2 && mixedResults.length < 9) {
-
-        // Calculate how many AI cards we need to fill the row to 9
         const needed = 9 - mixedResults.length;
         setSlotsLeft(needed);
         
-        // Show what we have immediately, but show AI loader
         setWebsites(mixedResults);
         setAiLoading(true); 
         console.log(`Found ${mixedResults.length} DB items. Asking AI for ${needed} more...`);
 
-        // Fetch AI Data
         const aiData = await searchWebsitesAI(search);
         
-        // Add fake IDs and flags for AI cards
         const aiWebsites = aiData.map((site: any, index: number) => ({
             ...site,
-            _id: `ai-${index}`, // Fake ID
+            _id: `ai-${index}`, 
             approved: false,
-            upvotes: [], // Empty array for likes
+            upvotes: [],
             views: 0,
             addedBy: 'AI_BOT'
         }));
         
-
-        // Filter Duplicates (Don't show duplicates if DB already has them)
         const uniqueAiSites = aiWebsites.filter((aiSite: any) => {
-            // 1. Clean both URLs
             const aiUrl = normalizeUrl(aiSite.url);
-            
-            // 2. Check if ANY database site matches this URL OR Title
             const existsInDb = mixedResults.some(dbSite => {
                 const dbUrl = normalizeUrl(dbSite.url);
                 const titleMatch = dbSite.title.toLowerCase() === aiSite.title.toLowerCase();
                 return dbUrl === aiUrl || titleMatch;
             });
-
-            return !existsInDb; // Only keep if it does NOT exist
+            return !existsInDb; 
         });
 
-        //show always only 9 results
         const limitedAiSites = uniqueAiSites.slice(0, needed);
-
-        // Merge! (Append AI results to DB results)
         mixedResults = [...mixedResults, ...limitedAiSites];
         setAiLoading(false);
       }
@@ -90,13 +91,26 @@ const Dashboard = () => {
       setWebsites(mixedResults);
 
     } catch (error) {
-      console.error("Failed to fetch websites", error);
+      console.error("Failed to fetch dashboard data", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // 2. Trigger fetch when Search OR Page changes
+  // 4. NEW HELPER: Refresh only bookmarks (Lightweight fetch)
+  // We pass this to the Card so it can update the UI immediately after saving
+  const refreshBookmarks = async () => {
+      try {
+          const cols = await getCollections();
+          const allSavedIds = new Set(
+            cols.flatMap(col => col.websites.map(w => typeof w === 'string' ? w : w._id))
+          );
+          setSavedWebsiteIds(allSavedIds);
+      } catch (error) {
+          console.error("Silent bookmark refresh failed", error);
+      }
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
         fetchData();
@@ -104,13 +118,11 @@ const Dashboard = () => {
     return () => clearTimeout(timer);
   }, [search, page]); 
 
-  // Reset page to 1 if user types a new search
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearch(e.target.value);
       setPage(1); 
   };
 
-  // 3. Handle Like Action (Optimistic Update)
   const handleLike = async (id: string) => {
     try {
         const response = await likeWebsite(id);
@@ -122,7 +134,6 @@ const Dashboard = () => {
     }
   };
 
-  // 4. Handle View Action (Update locally)
   const handleView = async (id: string) => {
     try {
         const response = await viewWebsite(id);
@@ -134,7 +145,6 @@ const Dashboard = () => {
     }
   };
 
-  // 5. Handle Approve Action (Admin)
   const handleApprove = async (id: string) => {
     try {
         await approveWebsite(id);
@@ -145,7 +155,6 @@ const Dashboard = () => {
     }
   };
 
-
   const quickSearches = [
     "AI writer", "background remover", "video editor", 
     "code assistant", "chatbot", "image generator"
@@ -153,7 +162,7 @@ const Dashboard = () => {
 
   const handleQuickSearch = (term: string) => {
     setSearch(term);
-    setPage(1); // Reset pagination
+    setPage(1); 
   };
 
   return (
@@ -177,18 +186,19 @@ const Dashboard = () => {
                 className="w-full bg-brand-dark/50 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-brand-primary transition-colors"
             />
         </div>
-        {/* NEW: Quick Suggestion Tags */}
-            <div className="flex flex-wrap gap-2">
-                {quickSearches.map((term) => (
-                    <button
-                        key={term}
-                        onClick={() => handleQuickSearch(term)}
-                        className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded-md bg-white/5 text-gray-400 hover:bg-brand-primary/20 hover:text-brand-primary transition-all border border-white/5"
-                    >
-                        {term}
-                    </button>
-                ))}
-            </div>
+      </div>
+        
+      {/* Quick Suggestion Tags */}
+      <div className="flex flex-wrap gap-2">
+            {quickSearches.map((term) => (
+                <button
+                    key={term}
+                    onClick={() => handleQuickSearch(term)}
+                    className="text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded-md bg-white/5 text-gray-400 hover:bg-brand-primary/20 hover:text-brand-primary transition-all border border-white/5"
+                >
+                    {term}
+                </button>
+            ))}
       </div>
 
       {/* Grid Content */}
@@ -202,22 +212,23 @@ const Dashboard = () => {
                 onLike={handleLike}
                 onApprove={handleApprove}
                 onView={handleView}
-                isAi={site.addedBy === 'AI_BOT'} // Check if source is AI
+                isAi={site.addedBy === 'AI_BOT'}
+
+                // 5. PASS NEW PROPS
+                isBookmarked={savedWebsiteIds.has(site._id)}
+                onBookmarkChange={refreshBookmarks}
             />
         ))}
 
-        {/* AI Loading Skeleton (Shows while fetching extra AI cards) */}
+        {/* AI Loading Skeleton */}
         {aiLoading && (
             <>
-                {/* A. The "Thinking" Card (Always takes 1st slot) */}
                 <div className="h-[22rem] rounded-2xl bg-white/5 animate-pulse border border-white/10 flex flex-col items-center justify-center p-6 text-center">
                     <div className="w-12 h-12 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mb-4"></div>
                     <span className="text-brand-primary font-bold">AI Agent Working...</span>
                     <span className="text-gray-500 text-sm mt-2">Finding relevant tools for "{search}"</span>
                 </div>
 
-                {/* B. The Empty Skeletons (Fills remaining slots) */}
-                {/* If slotsLeft is 4, we need 3 more empty skeletons (4 - 1 = 3) */}
                 {slotsLeft > 1 && Array.from({ length: slotsLeft - 1 }).map((_, index) => (
                     <div 
                         key={`ai-skeleton-${index}`} 
@@ -228,15 +239,21 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Empty State (Only if BOTH DB and AI failed) */}
+      {/* Empty State */}
       {!loading && !aiLoading && websites.length === 0 && (
          <div className="text-center py-20">
             <p className="text-gray-400 mb-2">No tools found matching "{search}"</p>
          </div>
       )}
 
-      {/* --- PAGINATION BUTTONS --- */}
-      {/* Only show pagination if we have results and not loading */}
+      {/* Loading State for Main Fetch */}
+      {loading && !aiLoading && (
+           <div className="flex justify-center py-20">
+               <FaSpinner className="animate-spin text-3xl text-brand-primary" />
+           </div>
+      )}
+
+      {/* PAGINATION BUTTONS */}
       {!loading && !aiLoading && websites.length > 0 && (
           <div className="flex justify-center items-center gap-4 mt-8">
             <button

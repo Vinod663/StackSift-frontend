@@ -14,6 +14,8 @@ const AdminDashboard = lazy(() => import('../pages/AdminDashboard'));
 
 const SubmitPage = lazy(() => import('../pages/SubmitTool')); 
 
+const BookmarksPage = lazy(() => import('../pages/Bookmarks'));
+
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="text-center py-20 text-gray-400">
@@ -60,7 +62,7 @@ export default function AppRouter() {
 
                         <Route path="/help" element={<Placeholder title="Documentation" />} />
                         <Route path="/contact" element={<Placeholder title="Contact Support" />} />
-                        <Route path="/bookmarks" element={<Placeholder title="My Collections" />} />
+                        <Route path="/bookmarks" element={<BookmarksPage />} /> //http://localhost:5173/bookmarks
                         <Route path="/profile" element={<Placeholder title="User Profile" />} />
                         
                         {/* Example of Role-Based Route (Admin) */}

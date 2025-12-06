@@ -20,6 +20,15 @@ interface WebsiteResponse {
   totalWebsites: number;
 }
 
+
+export interface WebsitePayload {
+    title: string;
+    url: string;
+    description?: string;
+    category?: string;
+    tags?: string[];
+}
+
 // 1. Get All Websites (with Search & Filter)
 export const getWebsites = async (search = '', category = '', page = 1, limit = 9, approved?: string) => {
   // Pass search params to the backend
@@ -61,4 +70,11 @@ export const updateWebsiteDetails = async (id: string, data: Partial<Website>) =
 export const searchWebsitesAI = async (query: string) => {
   const response = await api.post('/post/search-ai', { query });
   return response.data.websites; // Returns array of tools
+};
+
+
+export const addWebsite = async (data: WebsitePayload) => {
+    // No headers needed here! The 'api' interceptor handles it.
+    const response = await api.post('/post/addWebsite', data);
+    return response.data;
 };

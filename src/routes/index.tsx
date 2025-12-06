@@ -12,7 +12,7 @@ const Dashboard = lazy(() => import('../pages/Dashboard'));
 const AdminDashboard = lazy(() => import('../pages/AdminDashboard'));
 
 
-const SubmitPage = lazy(() => import('../pages/Dashboard')); 
+const SubmitPage = lazy(() => import('../pages/SubmitTool')); 
 
 
 const Placeholder = ({ title }: { title: string }) => (

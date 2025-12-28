@@ -94,9 +94,14 @@ const WebsiteCard = ({ data, onLike, onApprove, onView, onDelete, onEdit, isBook
                   </button>
 
                   {/* --- CHANGED: Bookmark Button --- */}
+                  {/* //check if the card is Ai generated, if so, disable the bookmark button and color transition to cyan */}
                   <button 
+                     disabled={isAi}
                      onClick={() => setIsModalOpen(true)}
-                     className={`flex items-center gap-1 transition-colors ${
+                     className={`flex items-center gap-1 transition-colors group/bookmark ${
+                        /* Disable color change if AI generated */
+                        isAi ? 'opacity-50 cursor-not-allowed' : ''
+                     } ${
                         isBookmarked 
                         ? 'text-brand-secondary' // Highlight color (e.g., Cyan/Blue)
                         : 'hover:text-brand-secondary text-gray-500'

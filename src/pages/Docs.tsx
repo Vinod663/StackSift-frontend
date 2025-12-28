@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaSearch, FaBook, FaCode, FaBars, FaTimes, FaChevronRight, FaLightbulb, FaShieldAlt, FaDatabase, FaServer, FaReact, FaFolderOpen, FaGoogle } from 'react-icons/fa';
+import { FaSearch, FaBook, FaBars, FaTimes, FaChevronRight, FaLightbulb, FaShieldAlt, FaDatabase, FaServer, FaReact, FaFolderOpen, FaGoogle } from 'react-icons/fa';
 
 const Docs = () => {
   const [activeSection, setActiveSection] = useState('intro');
@@ -210,10 +210,15 @@ const Docs = () => {
                 <p className="text-gray-400">Create a <code className="text-brand-primary bg-brand-primary/10 px-1 rounded">.env</code> file in your backend root directory.</p>
                 <div className="bg-[#0d1117] border border-white/10 rounded-xl p-5 font-mono text-sm text-gray-300">
                     <p><span className="text-purple-400">PORT</span>=4000</p>
-                    <p><span className="text-purple-400">MONGO_URI</span>=mongodb+srv://user:pass@cluster.mongodb.net/stacksift</p>
-                    <p><span className="text-purple-400">JWT_SECRET</span>=your_super_secret_key_123</p>
-                    <p><span className="text-purple-400">REFRESH_TOKEN_SECRET</span>=your_refresh_secret_key_456</p>
-                    <p><span className="text-purple-400">GEMINI_API_KEY</span>=AIzaSyD...</p>
+                    
+                    {/* CHANGED: Use angle brackets < > to indicate placeholders. Scanners usually ignore this. */}
+                    <p><span className="text-purple-400">MONGO_URI</span>=mongodb+srv://&lt;username&gt;:&lt;password&gt;@cluster0.mongodb.net/stacksift</p>
+                    
+                    <p><span className="text-purple-400">JWT_SECRET</span>=your_jwt_secret_key</p>
+                    <p><span className="text-purple-400">REFRESH_TOKEN_SECRET</span>=your_refresh_token_secret</p>
+                    
+                    {/* CHANGED: Truncate the key even more to be safe */}
+                    <p><span className="text-purple-400">GEMINI_API_KEY</span>=AIzaSy_YOUR_API_KEY_HERE</p>
                 </div>
             </section>
 

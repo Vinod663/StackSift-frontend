@@ -15,6 +15,7 @@ const AdminDashboard = lazy(() => import('../pages/AdminDashboard'));
 const SubmitPage = lazy(() => import('../pages/SubmitTool')); 
 
 const BookmarksPage = lazy(() => import('../pages/Bookmarks'));
+const DocsPage = lazy(() => import('../pages/Docs'));
 
 
 const Placeholder = ({ title }: { title: string }) => (
@@ -60,7 +61,7 @@ export default function AppRouter() {
                         <Route path="/submit" element={<SubmitPage />} />   //http://localhost:5173/submit
 
 
-                        <Route path="/help" element={<Placeholder title="Documentation" />} />
+                        <Route path="/help" element={<DocsPage />} /> //http://localhost:5173/help
                         <Route path="/contact" element={<Placeholder title="Contact Support" />} />
                         <Route path="/bookmarks" element={<BookmarksPage />} /> //http://localhost:5173/bookmarks
                         <Route path="/profile" element={<Placeholder title="User Profile" />} />

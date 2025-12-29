@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google'; // Import Google Component
 import { loginSuccess } from '../redux/action/authAction'; 
-import { FaGoogle, FaLayerGroup } from 'react-icons/fa';
-import {loginUser} from '../services/auth';
+import { FaLayerGroup } from 'react-icons/fa';
+import { loginUser, googleAuthenticate } from '../services/auth'; // Import googleAuthenticate
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,52 +15,65 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // 1. Standard Login
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(''); // Clear previous errors
+    setError('');
 
     try {
-      // 1. Call the Real Backend
       const data = await loginUser(email, password);
-
-      // 2. Save to Redux (using the real data from DB)
-      // Note: backend sends 'accessToken', redux expects 'token'. Map it here.
+      
       dispatch(loginSuccess({
         user: data.user,
-        token: data.accessToken, // Handle both naming cases safely
-        refreshToken: data.refreshToken // Handle both naming cases safely
+        token: data.accessToken,
+        refreshToken: data.refreshToken
       }));
 
-      alert("Login Successful! Welcome " + data.user.name);
-      
-      // Navigate to dashboard 
       navigate('/dashboard'); 
 
     } catch (err: any) {
       console.error("Login Failed", err);
-      // Show the error message from the backend (e.g., "Invalid credentials")
-      setError(err.response?.data?.message || 'Login failed. Please check backend.');
+      setError(err.response?.data?.message || 'Login failed. Please check credentials.');
     } finally {
       setIsLoading(false);
     }
   };
 
+  // 2. Google Login Handler
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+      try {
+          setIsLoading(true);
+          // Send the ID Token to your backend
+          const data = await googleAuthenticate(credentialResponse.credential);
+          
+          // Save to Redux
+          dispatch(loginSuccess({
+              user: data.user,
+              token: data.accessToken,
+              refreshToken: data.refreshToken
+          }));
+          
+          navigate('/dashboard');
+      } catch (err: any) {
+          console.error("Google Auth Failed", err);
+          setError(err.response?.data?.message || 'Google Login failed.');
+      } finally {
+          setIsLoading(false);
+      }
+  };
+
   return (
-    <div className="min-h-screen bg-brand-dark flex items-center justify-center relative overflow-hidden text-white font-sans">
+    <div className="min-h-screen bg-brand-dark flex items-center justify-center relative overflow-hidden text-white font-sans p-4">
       
-      {/* --- BACKGROUND ANIMATION (Updated Colors) --- */}
-      {/* 1. Cyan Blob */}
+      {/* --- BACKGROUND ANIMATION --- */}
       <div className="absolute top-0 -left-4 w-72 h-72 bg-brand-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-      {/* 2. Blue Blob */}
       <div className="absolute top-0 -right-4 w-72 h-72 bg-brand-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-      {/* 3. Dark Blue/Indigo Blob (Replaced the Pink one) */}
       <div className="absolute -bottom-8 left-20 w-72 h-72 bg-blue-800 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
 
       {/* --- GLASS CARD --- */}
       <div className="relative z-10 w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-2xl shadow-2xl">
         
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-primary to-brand-secondary mb-4 shadow-lg shadow-brand-primary/30">
             <FaLayerGroup className="text-xl text-white" />
@@ -72,14 +86,13 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Form */}
         {error && (
         <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 rounded text-red-400 text-sm text-center">
            {error}
         </div>
         )}
+        
         <form onSubmit={handleSubmit} className="space-y-5">
-          
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
             <input 
@@ -118,17 +131,21 @@ const Login = () => {
             <div className="flex-grow border-t border-gray-700"></div>
         </div>
 
-        {/* Google Button */}
-        <button 
-          type="button"
-          className="w-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-medium py-3 rounded-lg flex items-center justify-center gap-2 transition-all duration-300"
-        >
-          <FaGoogle className="text-white" />
-          <span>Google</span>
-        </button>
+        {/* REAL GOOGLE BUTTON */}
+        <div className="flex justify-center">
+            <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setError("Google Sign-In Failed")}
+                theme="filled_black"
+                size="large"
+                shape="pill"
+                width="320"
+                text="signin_with"
+            />
+        </div>
 
         <p className="mt-8 text-center text-sm text-gray-500">
-            Don't have an account? <a href="#" className="text-brand-secondary hover:text-white transition-colors">Sign up</a>
+            Don't have an account? <Link to="/register" className="text-brand-secondary hover:text-white transition-colors">Sign up</Link>
         </p>
       </div>
     </div>

@@ -38,3 +38,10 @@ export const refreshTokens = async (refreshToken: string) => {
   });
   return response.data; // Should return { accessToken: '...' }
 };
+
+
+// http://localhost:4000/api/v1/auth/google
+export const googleAuthenticate = async (idToken: string) => {
+  const response = await api.post<AuthResponse>('/auth/google', { token: idToken });
+  return response.data;
+};

@@ -245,11 +245,11 @@ const Docs = () => {
                                 <p className="text-sm text-gray-400 mt-1">Long-lived (7d) tokens stored in HTTP-Only cookies. Automatically rotates access tokens via Axios Interceptors.</p>
                             </div>
                         </li>
-                        <li className="flex gap-4 opacity-50">
+                        <li className="flex gap-4">
                             <div className="bg-red-500/10 p-2 h-fit rounded-lg"><FaGoogle className="text-red-400" /></div>
                             <div>
-                                <h4 className="font-bold text-white flex items-center gap-2">Google OAuth <span className="text-[10px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full border border-red-500/30">COMING SOON</span></h4>
-                                <p className="text-sm text-gray-400 mt-1">One-click login integration using Passport.js strategy. Planned for v2.0.</p>
+                                <h4 className="font-bold text-white">Google OAuth</h4>
+                                <p className="text-sm text-gray-400 mt-1">Seamless one-click authentication. The frontend acquires an ID Token via Google Identity Services, which is cryptographically verified by the backend for secure account creation or login.</p>
                             </div>
                         </li>
                     </ul>
@@ -345,6 +345,8 @@ const Docs = () => {
                         <h3 className="text-lg font-bold text-white mb-4 border-l-4 border-green-500 pl-3">Authentication</h3>
                         <ApiEndpoint method="POST" path="/auth/register" desc="Create a new user account." params="Body: { name, email, password }" />
                         <ApiEndpoint method="POST" path="/auth/login" desc="Login and receive Access/Refresh tokens." params="Body: { email, password }" />
+                        <ApiEndpoint method="POST" path="/auth/refresh-token" desc="Rotate expired access token using HttpOnly cookie." />
+                        <ApiEndpoint method="POST" path="/auth/google" desc="Authenticate using Google ID Token." params="Body: { token: 'ey...' }" />
                         <ApiEndpoint method="POST" path="/auth/refresh-token" desc="Rotate expired access token using HttpOnly cookie." />
                     </div>
                 </div>

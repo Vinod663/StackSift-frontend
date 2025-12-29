@@ -5,8 +5,10 @@ import { type RootState } from "../redux/store";
 import PrivateRoute from "../components/PrivateRoute"; 
 import Layout from "../components/Layout";
 
+
 // --- LAZY LOADS ---
 const Login = lazy(() => import('../pages/Login'));
+const Register = lazy(() => import('../pages/Register'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
 
 const AdminDashboard = lazy(() => import('../pages/AdminDashboard'));
@@ -43,6 +45,8 @@ export default function AppRouter() {
                     
                     <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} /> 
                     <Route path="/login" element={<Navigate to="/" replace />} /> 
+
+                    <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register />} />
 
                     {/* --- PROTECTED ROUTES --- */}
                     {/* Wrapped in Layout (Navbar) & PrivateRoute (Security) */}

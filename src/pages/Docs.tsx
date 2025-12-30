@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaSearch, FaBook, FaBars, FaTimes, FaChevronRight, FaLightbulb, FaShieldAlt, FaDatabase, FaServer, FaReact, FaFolderOpen, FaGoogle } from 'react-icons/fa';
+import { FaSearch, FaBook, FaBars, FaTimes, FaChevronRight, FaLightbulb, FaShieldAlt, FaDatabase, FaServer, FaReact, FaFolderOpen, FaGoogle, FaUserCircle, FaPaperPlane } from 'react-icons/fa';
 
 const Docs = () => {
   const [activeSection, setActiveSection] = useState('intro');
@@ -20,17 +20,20 @@ const Docs = () => {
       title: 'Core Features',
       items: [
         { id: 'auth-system', label: 'Authentication' },
+        { id: 'user-system', label: 'User & Profile' },
         { id: 'ai-engine', label: 'AI Engine (Gemini)' },
-        { id: 'collections-feature', label: 'Collections System' }, // Renamed ID to avoid clash
+        { id: 'collections-feature', label: 'Collections System' },
       ]
     },
     {
       title: 'API Reference',
       items: [
         { id: 'api-overview', label: 'Overview' },
+        { id: 'api-auth', label: 'Auth Endpoints' },
+        { id: 'api-user', label: 'User Endpoints' },
         { id: 'api-tools', label: 'Tools Endpoints' },
         { id: 'api-collections', label: 'Collections Endpoints' },
-        { id: 'api-auth', label: 'Auth Endpoints' },
+        { id: 'api-other', label: 'Support & Utils' },
       ]
     }
   ];
@@ -162,7 +165,7 @@ const Docs = () => {
                         { icon: FaReact, color: "text-blue-400", title: "Frontend", desc: "React + Vite + Tailwind" },
                         { icon: FaServer, color: "text-green-400", title: "Backend", desc: "Node.js + Express" },
                         { icon: FaDatabase, color: "text-green-500", title: "Database", desc: "MongoDB Atlas" },
-                        { icon: FaLightbulb, color: "text-yellow-400", title: "AI Model", desc: "Gemini-2.5-flash" },
+                        { icon: FaLightbulb, color: "text-yellow-400", title: "AI Model", desc: "Gemini-2.5-Flash" },
                     ].map((tech, i) => (
                         <div key={i} className="bg-white/5 border border-white/5 p-5 rounded-2xl hover:border-brand-primary/20 transition-colors group">
                             <tech.icon className={`text-3xl mb-3 ${tech.color} group-hover:scale-110 transition-transform`} />
@@ -209,16 +212,24 @@ const Docs = () => {
                 </h2>
                 <p className="text-gray-400">Create a <code className="text-brand-primary bg-brand-primary/10 px-1 rounded">.env</code> file in your backend root directory.</p>
                 <div className="bg-[#0d1117] border border-white/10 rounded-xl p-5 font-mono text-sm text-gray-300">
+                    <p className="text-gray-500 text-xs py-1"># Core Config</p>
                     <p><span className="text-purple-400">PORT</span>=4000</p>
-                    
-                    {/* CHANGED: Use angle brackets < > to indicate placeholders. Scanners usually ignore this. */}
-                    <p><span className="text-purple-400">MONGO_URI</span>=mongodb+srv://&lt;username&gt;:&lt;password&gt;@cluster0.mongodb.net/stacksift</p>
-                    
-                    <p><span className="text-purple-400">JWT_SECRET</span>=your_jwt_secret_key</p>
-                    <p><span className="text-purple-400">REFRESH_TOKEN_SECRET</span>=your_refresh_token_secret</p>
-                    
-                    {/* CHANGED: Truncate the key even more to be safe */}
-                    <p><span className="text-purple-400">GEMINI_API_KEY</span>=AIzaSy_YOUR_API_KEY_HERE</p>
+                    <p><span className="text-purple-400">MONGO_URI</span>=mongodb+srv://&lt;user&gt;:&lt;pass&gt;@cluster.mongodb.net/stacksift</p>
+                    <br/>
+                    <p className="text-gray-500 text-xs py-1"># Auth & Security</p>
+                    <p><span className="text-purple-400">JWT_SECRET</span>=your_jwt_secret</p>
+                    <p><span className="text-purple-400">REFRESH_TOKEN_SECRET</span>=your_refresh_secret</p>
+                    <p><span className="text-purple-400">GOOGLE_CLIENT_ID</span>=your_google_id_here</p>
+                    <br/>
+                    <p className="text-gray-500 text-xs py-1"># AI & Cloud Services</p>
+                    <p><span className="text-purple-400">GEMINI_API_KEY</span>=AIzaSy_YOUR_API_KEY</p>
+                    <p><span className="text-purple-400">CLOUDINARY_CLOUD_NAME</span>=your_cloud_name</p>
+                    <p><span className="text-purple-400">CLOUDINARY_API_KEY</span>=your_api_key</p>
+                    <p><span className="text-purple-400">CLOUDINARY_API_SECRET</span>=your_api_secret</p>
+                    <br/>
+                    <p className="text-gray-500 text-xs py-1"># Email Support</p>
+                    <p><span className="text-purple-400">MAIL_USER</span>=your_gmail@gmail.com</p>
+                    <p><span className="text-purple-400">MAIL_PASS</span>=your_app_password</p>
                 </div>
             </section>
 
@@ -249,39 +260,48 @@ const Docs = () => {
                             <div className="bg-red-500/10 p-2 h-fit rounded-lg"><FaGoogle className="text-red-400" /></div>
                             <div>
                                 <h4 className="font-bold text-white">Google OAuth</h4>
-                                <p className="text-sm text-gray-400 mt-1">Seamless one-click authentication. The frontend acquires an ID Token via Google Identity Services, which is cryptographically verified by the backend for secure account creation or login.</p>
+                                <p className="text-sm text-gray-400 mt-1">Seamless one-click authentication via Google Identity Services. Supports automatic account linking for existing users.</p>
                             </div>
                         </li>
                     </ul>
                 </div>
             </section>
 
+            {/* USER SYSTEM */}
+            <section id="user-system" className="scroll-mt-32 space-y-6">
+                <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                    <span className="text-brand-primary">05.</span> User & Profile
+                </h2>
+                <p className="text-gray-400">
+                    A comprehensive profile system allowing users to manage their identity and preferences.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+                        <FaUserCircle className="text-3xl text-purple-400 mb-3" />
+                        <h4 className="font-bold text-white mb-2">Cloudinary Integration</h4>
+                        <p className="text-sm text-gray-400">Profile pictures are optimized and hosted via Cloudinary. Supports uploading local files which are automatically processed and stored as secure URLs.</p>
+                    </div>
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+                        <FaLightbulb className="text-3xl text-yellow-400 mb-3" />
+                        <h4 className="font-bold text-white mb-2">Creative Customization</h4>
+                        <p className="text-sm text-gray-400">Users can personalize their profile with custom cover banners (using CSS gradients/patterns) and view real-time stats of their contributions.</p>
+                    </div>
+                </div>
+            </section>
+
             {/* AI ENGINE */}
             <section id="ai-engine" className="scroll-mt-32 space-y-6">
                 <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                    <span className="text-brand-primary">05.</span> AI Engine
+                    <span className="text-brand-primary">06.</span> AI Engine
                 </h2>
-                <p className="text-gray-400">
-                    StackSift utilizes <span className="text-white font-bold">Gemini 1.5 Flash</span> for two main tasks:
-                </p>
-                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="border border-white/10 rounded-xl p-5 bg-gradient-to-b from-white/5 to-transparent">
                         <h3 className="font-bold text-white mb-2">1. Auto-Submission Analysis</h3>
-                        <p className="text-sm text-gray-400 mb-4">When a user submits a URL, the AI visits the site (virtually), reads the meta tags, and generates:</p>
-                        <div className="bg-black/50 p-3 rounded-lg text-xs font-mono text-green-300">
-                            "summary": "A modern React framework...",<br/>
-                            "category": "Development",<br/>
-                            "tags": ["frontend", "javascript"]
-                        </div>
+                        <p className="text-sm text-gray-400 mb-4">When a user submits a URL, Gemini visits the site (virtually), reads meta tags, and generates summaries and tags automatically.</p>
                     </div>
-                    
                     <div className="border border-white/10 rounded-xl p-5 bg-gradient-to-b from-white/5 to-transparent">
                         <h3 className="font-bold text-white mb-2">2. Hybrid Search</h3>
-                        <p className="text-sm text-gray-400 mb-4">If DB results are low, the system asks AI to "hallucinate" relevant tools, checks if they exist, and merges them into the results.</p>
-                        <div className="flex items-center gap-2 text-xs font-mono bg-black/50 p-3 rounded-lg text-yellow-300">
-                            <FaDatabase /> DB Results + <FaLightbulb /> AI Suggestions
-                        </div>
+                        <p className="text-sm text-gray-400 mb-4">If DB results are low, the system asks AI to "hallucinate" relevant tools, checks if they exist, and merges them into results.</p>
                     </div>
                 </div>
             </section>
@@ -289,21 +309,18 @@ const Docs = () => {
             {/* COLLECTIONS SYSTEM */}
             <section id="collections-feature" className="scroll-mt-32 space-y-6">
                 <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                    <span className="text-brand-primary">06.</span> Collections System
+                    <span className="text-brand-primary">07.</span> Collections System
                 </h2>
-                <p className="text-gray-400">
-                    The platform includes a robust bookmarking system allowing users to organize tools into named folders.
-                </p>
                 <div className="flex gap-4 overflow-x-auto pb-4">
                     <div className="min-w-[250px] bg-white/5 border border-white/10 rounded-xl p-4">
                         <FaFolderOpen className="text-3xl text-yellow-500 mb-3" />
                         <h4 className="font-bold text-white">Custom Folders</h4>
-                        <p className="text-xs text-gray-400 mt-1">Users can create unlimited folders (e.g., "Design Tools", "Backend Stack").</p>
+                        <p className="text-xs text-gray-400 mt-1">Users can create unlimited folders to organize their stack.</p>
                     </div>
                     <div className="min-w-[250px] bg-white/5 border border-white/10 rounded-xl p-4">
                         <FaDatabase className="text-3xl text-blue-500 mb-3" />
                         <h4 className="font-bold text-white">Relational Data</h4>
-                        <p className="text-xs text-gray-400 mt-1">Collections are stored as references to Tool IDs, ensuring data consistency.</p>
+                        <p className="text-xs text-gray-400 mt-1">Collections are stored as references to Tool IDs for consistency.</p>
                     </div>
                 </div>
             </section>
@@ -311,7 +328,7 @@ const Docs = () => {
             {/* API REFERENCE */}
             <section id="api-ref" className="scroll-mt-32 space-y-6">
                 <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                    <span className="text-brand-primary">07.</span> API Reference
+                    <span className="text-brand-primary">08.</span> API Reference
                 </h2>
                 <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                     <p className="text-gray-400 text-sm mb-6">Base URL: <code className="bg-black/30 px-2 py-1 rounded text-white">http://localhost:4000/api/v1</code></p>
@@ -319,7 +336,26 @@ const Docs = () => {
                     {/* OVERVIEW */}
                     <div id="api-overview" className="mb-8">
                         <h3 className="text-lg font-bold text-white mb-4 border-l-4 border-brand-primary pl-3">Overview</h3>
-                        <p className="text-sm text-gray-400">All responses follow a standard JSON structure. Authentication is handled via Bearer tokens in the Authorization header.</p>
+                        <p className="text-sm text-gray-400">Authentication is handled via Bearer tokens. All endpoints expect JSON bodies unless specified (e.g., Multipart for images).</p>
+                    </div>
+
+                    {/* AUTH ENDPOINTS */}
+                    <div id="api-auth" className="mb-8">
+                        <h3 className="text-lg font-bold text-white mb-4 border-l-4 border-green-500 pl-3">Authentication</h3>
+                        <ApiEndpoint method="POST" path="/auth/register" desc="Create a new user account." params="Body: { name, email, password }" />
+                        <ApiEndpoint method="POST" path="/auth/login" desc="Login and receive Access/Refresh tokens." params="Body: { email, password }" />
+                        <ApiEndpoint method="POST" path="/auth/google" desc="Authenticate using Google ID Token." params="Body: { token: 'ey...' }" />
+                        <ApiEndpoint method="POST" path="/auth/refresh-token" desc="Rotate expired access token using HttpOnly cookie." />
+                        <ApiEndpoint method="POST" path="/auth/verify-password" desc="Security check (Sudo mode) for editing sensitive profile data." params="Body: { password }" />
+                    </div>
+
+                    {/* USER ENDPOINTS */}
+                    <div id="api-user" className="mb-8">
+                        <h3 className="text-lg font-bold text-white mb-4 border-l-4 border-purple-500 pl-3">User & Profile</h3>
+                        <ApiEndpoint method="GET" path="/user/profile" desc="Get current user details." />
+                        <ApiEndpoint method="PUT" path="/user/profile" desc="Update profile info (Name, Bio, Password, Cover)." params="Body: { name, bio, password?, coverGradient? }" />
+                        <ApiEndpoint method="POST" path="/user/avatar" desc="Upload profile picture to Cloudinary." params="Body: FormData (key: 'avatar')" />
+                        <ApiEndpoint method="GET" path="/user/stats" desc="Get user contribution counts." />
                     </div>
 
                     {/* TOOLS ENDPOINTS */}
@@ -340,14 +376,10 @@ const Docs = () => {
                         <ApiEndpoint method="DELETE" path="/collections/:id" desc="Delete a folder." />
                     </div>
 
-                    {/* AUTH ENDPOINTS */}
-                    <div id="api-auth" className="mb-8">
-                        <h3 className="text-lg font-bold text-white mb-4 border-l-4 border-green-500 pl-3">Authentication</h3>
-                        <ApiEndpoint method="POST" path="/auth/register" desc="Create a new user account." params="Body: { name, email, password }" />
-                        <ApiEndpoint method="POST" path="/auth/login" desc="Login and receive Access/Refresh tokens." params="Body: { email, password }" />
-                        <ApiEndpoint method="POST" path="/auth/refresh-token" desc="Rotate expired access token using HttpOnly cookie." />
-                        <ApiEndpoint method="POST" path="/auth/google" desc="Authenticate using Google ID Token." params="Body: { token: 'ey...' }" />
-                        <ApiEndpoint method="POST" path="/auth/refresh-token" desc="Rotate expired access token using HttpOnly cookie." />
+                    {/* OTHER ENDPOINTS */}
+                    <div id="api-other" className="mb-8">
+                        <h3 className="text-lg font-bold text-white mb-4 border-l-4 border-gray-500 pl-3">Support</h3>
+                        <ApiEndpoint method="POST" path="/contact" desc="Send a support email via NodeMailer." params="Body: { name, email, subject, message }" />
                     </div>
                 </div>
             </section>

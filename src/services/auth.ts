@@ -48,11 +48,12 @@ export const googleAuthenticate = async (idToken: string) => {
 
 // Update Text Details
 // http://localhost:4000/api/v1/user/profile
-export const updateUserProfile = async (name: string, bio: string, password?: string) => {
+export const updateUserProfile = async (name: string, bio: string, password?: string, coverGradient?: string) => {
     const payload: any = { name, bio };
     if (password && password.trim() !== "") {
         payload.password = password;
     }
+    if (coverGradient) payload.coverGradient = coverGradient;
     const response = await api.put('/user/profile', payload);
     return response.data; 
 };

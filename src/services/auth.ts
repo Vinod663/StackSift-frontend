@@ -45,3 +45,41 @@ export const googleAuthenticate = async (idToken: string) => {
   const response = await api.post<AuthResponse>('/auth/google', { token: idToken });
   return response.data;
 };
+
+// Update Text Details
+// http://localhost:4000/api/v1/user/profile
+export const updateUserProfile = async (name: string, bio: string, password?: string) => {
+    const payload: any = { name, bio };
+    if (password && password.trim() !== "") {
+        payload.password = password;
+    }
+    const response = await api.put('/user/profile', payload);
+    return response.data; 
+};
+
+// Upload Avatar
+// http://localhost:4000/api/v1/user/avatar
+export const uploadUserAvatar = async (file: File) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const response = await api.post('/user/avatar', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return response.data; // returns { message, user }
+};
+
+// Get Stats
+// http://localhost:4000/api/v1/user/stats
+export const fetchUserStats = async () => {
+    const response = await api.get('/user/stats');
+    return response.data; // returns { tools: number, collections: number }
+};
+
+
+// Verify Password
+// http://localhost:4000/api/v1/auth/verify-password
+export const checkPassword = async (password: string) => {
+    const response = await api.post('/auth/verify-password', { password });
+    return response.data;
+};

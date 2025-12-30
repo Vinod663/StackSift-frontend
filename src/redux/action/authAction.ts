@@ -7,6 +7,7 @@ export interface User {
     email: string;
     role: string[];
     avatarUrl?: string;
+    bio?: string;
 }
 
 // 1. Action to save user data when they log in

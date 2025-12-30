@@ -20,6 +20,8 @@ const BookmarksPage = lazy(() => import('../pages/Bookmarks'));
 const DocsPage = lazy(() => import('../pages/Docs'));
 const SupportPage = lazy(() => import('../pages/Support'));
 
+const ProfilePage = lazy(() => import('../pages/Profile'));
+
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="text-center py-20 text-gray-400">
@@ -69,7 +71,7 @@ export default function AppRouter() {
                         <Route path="/help" element={<DocsPage />} /> //http://localhost:5173/help
                         <Route path="/contact" element={<SupportPage />} /> //http://localhost:5173/contact
                         <Route path="/bookmarks" element={<BookmarksPage />} /> //http://localhost:5173/bookmarks
-                        <Route path="/profile" element={<Placeholder title="User Profile" />} />
+                        <Route path="/profile" element={<ProfilePage />} /> //http://localhost:5173/profile
                         
                         {/* Example of Role-Based Route (Admin) */}
                         <Route 

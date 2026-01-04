@@ -67,15 +67,15 @@ StackSift provides developers with an intelligent interface to discover, organiz
 ## Screenshots
 
 **Dashboard & AI Search**
-![Dashboard Screenshot](path_to_dashboard_screenshot.png)
+![Dashboard Screenshot](https://i.imgur.com/Qj80FBN.png)
 *The main dashboard featuring the search bar and tool grid.*
 
 **User Profile & Customization**
-![Profile Screenshot](path_to_profile_screenshot.png)
+![Profile Screenshot](https://i.imgur.com/6unHzf3.png)
 *User profile showing stats, avatar, and the cover template selection modal.*
 
 **Documentation Page**
-![Docs Screenshot](path_to_docs_screenshot.png)
+![Docs Screenshot](https://i.imgur.com/V2V9dwq.png)
 *Built-in API and feature documentation.*
 
 ## Deployment

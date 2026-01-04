@@ -29,17 +29,17 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-gray-400">
               <li><Link to="/dashboard" className="hover:text-brand-primary transition-colors">Trending Tools</Link></li>
               <li><Link to="/submit" className="hover:text-brand-primary transition-colors">Submit a Tool</Link></li>
-              <li><a href="#" className="hover:text-brand-primary transition-colors">New Arrivals</a></li>
+              <li><Link to="/bookmarks" className="hover:text-brand-primary transition-colors">Bookmarks</Link></li>
             </ul>
           </div>
 
           {/* Links Column 2 */}
           <div>
-            <h4 className="text-white font-bold mb-4">Community</h4>
+            <h4 className="text-white font-bold mb-4">Other</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-brand-primary transition-colors">GitHub Repo</a></li>
-              <li><a href="#" className="hover:text-brand-primary transition-colors">Discord Server</a></li>
-              <li><a href="#" className="hover:text-brand-primary transition-colors">Twitter / X</a></li>
+              <li><Link to="/help" className="hover:text-brand-primary transition-colors">Documentation</Link></li>
+              <li><Link to="/profile" className="hover:text-brand-primary transition-colors">User Profile</Link></li>
+              <li><Link to="/contact" className="hover:text-brand-primary transition-colors">Help</Link></li>
             </ul>
           </div>
 

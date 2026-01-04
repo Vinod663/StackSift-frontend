@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { FaSearch, FaSpinner } from 'react-icons/fa'; // Added FaSpinner for better loading UI
+import { FaSearch, FaSpinner } from 'react-icons/fa'; 
 import { getWebsites, likeWebsite, approveWebsite, viewWebsite, searchWebsitesAI, type Website } from '../services/website';
 import WebsiteCard from '../components/WebsiteCard';
-import { getCollections } from '../services/collection'; // 1. Import this
+import { getCollections } from '../services/collection'; 
 
-// Helper to clean URLs for comparison
 const normalizeUrl = (url: string) => {
     return url
         .toLowerCase()
@@ -16,7 +15,7 @@ const normalizeUrl = (url: string) => {
 const Dashboard = () => {
   const [websites, setWebsites] = useState<Website[]>([]);
   
-  // 2. NEW STATE: Track saved IDs
+  // Track saved IDs
   const [savedWebsiteIds, setSavedWebsiteIds] = useState<Set<string>>(new Set());
   
   const [search, setSearch] = useState('');
@@ -28,7 +27,7 @@ const Dashboard = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [slotsLeft, setSlotsLeft] = useState(0);
 
-  // 3. UPDATED Fetch Data Function
+  //  Fetch Data Function
   const fetchData = async () => {
     setLoading(true);
     setAiLoading(false);
@@ -41,7 +40,7 @@ const Dashboard = () => {
       ]);
 
       // --- B. Process Collections (Extract IDs) ---
-      // We map through all folders, get the website IDs, and flatten them into one Set
+      
       const allSavedIds = new Set(
         collectionData.flatMap(col => 
             col.websites.map(w => typeof w === 'string' ? w : w._id)
@@ -53,7 +52,7 @@ const Dashboard = () => {
       let mixedResults = websiteData.websites;
       setTotalPages(websiteData.totalPages || 1);
 
-      // --- D. HYBRID SEARCH LOGIC (Existing AI Logic) ---
+      // --- D. HYBRID SEARCH (Existing AI Logic) ---
       if (page === 1 && search.length > 2 && mixedResults.length < 9) {
         const needed = 9 - mixedResults.length;
         setSlotsLeft(needed);
@@ -97,8 +96,7 @@ const Dashboard = () => {
     }
   };
 
-  // 4. NEW HELPER: Refresh only bookmarks (Lightweight fetch)
-  // We pass this to the Card so it can update the UI immediately after saving
+  //  Refresh only bookmarks (Lightweight fetch)
   const refreshBookmarks = async () => {
       try {
           const cols = await getCollections();

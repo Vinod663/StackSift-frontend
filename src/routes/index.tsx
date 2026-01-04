@@ -23,12 +23,12 @@ const SupportPage = lazy(() => import('../pages/Support'));
 const ProfilePage = lazy(() => import('../pages/Profile'));
 
 
-const Placeholder = ({ title }: { title: string }) => (
-  <div className="text-center py-20 text-gray-400">
-    <h1 className="text-3xl text-white font-bold mb-4">{title}</h1>
-    <p>This feature is coming soon!</p>
-  </div>
-);
+// const Placeholder = ({ title }: { title: string }) => (
+//   <div className="text-center py-20 text-gray-400">
+//     <h1 className="text-3xl text-white font-bold mb-4">{title}</h1>
+//     <p>This feature is coming soon!</p>
+//   </div>
+// );
 
 export default function AppRouter() {
     const { isAuthenticated } = useSelector((state: RootState) => state.auth);
@@ -73,7 +73,7 @@ export default function AppRouter() {
                         <Route path="/bookmarks" element={<BookmarksPage />} /> //http://localhost:5173/bookmarks
                         <Route path="/profile" element={<ProfilePage />} /> //http://localhost:5173/profile
                         
-                        {/* Example of Role-Based Route (Admin) */}
+                        {/*Role-Based Route (Admin) */}
                         <Route 
                             path="/admin" 
                             element={

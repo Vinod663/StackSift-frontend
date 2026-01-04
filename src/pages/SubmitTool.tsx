@@ -41,14 +41,12 @@ const SubmitTool = () => {
             tags: tagsArray
         };
 
-        // Adjust your API URL here
         const res = await addWebsite(payload);
 
         console.log('Tool submitted successfully:', res.data);  
 
         setStatus({ type: 'success', message: 'Tool submitted successfully! AI is polishing the details.' });
         
-        // Optional: Redirect after delay
         setTimeout(() => navigate('/dashboard'), 2000);
 
     } catch (error: any) {
@@ -64,7 +62,7 @@ const SubmitTool = () => {
   return (
     <div className="max-w-4xl mx-auto animate-fade-in-up">
       
-      {/* 1. Header Section */}
+      {/* Header Section */}
       <div className="text-center mb-10">
         <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-400 mb-3">
             Submit a New Tool
@@ -77,7 +75,7 @@ const SubmitTool = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* 2. LEFT SIDE: The Form */}
+        {/*LEFT SIDE: The Form */}
         <div className="lg:col-span-2">
             <div className="bg-brand-dark/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl">
                 
@@ -124,7 +122,7 @@ const SubmitTool = () => {
 
                     <div className="h-px bg-white/5 w-full my-6"></div>
 
-                    {/* OPTIONAL / AI SECTION */}
+                    {/* AI SECTION */}
                     <div className="space-y-4 relative">
                         {/* Visual Hint for AI */}
                         <div className="flex items-center justify-between mb-2">
@@ -218,7 +216,7 @@ const SubmitTool = () => {
             </div>
         </div>
 
-        {/* 3. RIGHT SIDE: Info Card */}
+        {/*RIGHT SIDE: Info Card */}
         <div className="hidden lg:block space-y-6">
             <div className="bg-gradient-to-br from-purple-900/20 to-brand-dark border border-purple-500/20 rounded-2xl p-6 text-center relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">

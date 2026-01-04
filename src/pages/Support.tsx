@@ -72,7 +72,7 @@ const Support = () => {
   return (
     <div className="animate-fade-in-up pb-20">
       
-      {/* 1. HERO HEADER */}
+      {/*HERO HEADER */}
       <div className="text-center py-12 px-4">
         <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-200 to-gray-500 mb-4">
           How can we help you?
@@ -84,7 +84,7 @@ const Support = () => {
 
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-12">
         
-        {/* 2. LEFT COLUMN: FAQ SECTION */}
+        {/*LEFT COLUMN: FAQ SECTION */}
         <div className="space-y-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="p-3 bg-brand-primary/10 rounded-full text-brand-primary">
@@ -142,7 +142,7 @@ const Support = () => {
           </div>
         </div>
 
-        {/* 3. RIGHT COLUMN: CONTACT FORM */}
+        {/*RIGHT COLUMN: CONTACT FORM */}
         <div className="bg-brand-dark/50 backdrop-blur-md border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl h-fit sticky top-24">
           
           <div className="flex items-center gap-3 mb-8">

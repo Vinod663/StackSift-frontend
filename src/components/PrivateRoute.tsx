@@ -3,22 +3,21 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { type RootState } from '../redux/store';
 
-// We allow this component to either wrap children OR use Outlet
 interface PrivateRouteProps {
   children?: ReactNode;
   allowedRoles?: string[];
 }
 
 const PrivateRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
-  // 1. USE REDUX (Not Context)
+  //  REDUX (Not Context)
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
 
-  // 2. Check Login
+  //  Check Login
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
-  // 3. Check Roles (Your Logic)
+  // Check Roles 
   if (allowedRoles && user?.role) {
     const hasPermission = allowedRoles.some(role => user.role.includes(role));
     
@@ -34,7 +33,7 @@ const PrivateRoute = ({ children, allowedRoles }: PrivateRouteProps) => {
     }
   }
 
-  // 4. Return Children or Outlet
+  // Return Children or Outlet
   return children ? <>{children}</> : <Outlet />;
 };
 

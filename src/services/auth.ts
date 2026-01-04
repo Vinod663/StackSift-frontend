@@ -15,7 +15,7 @@ interface AuthResponse {
 
 
 
-// 3. Register Function (Bonus)
+// Register Function 
 //http://localhost:4000/api/v1/auth/register
 export const registerUser = async (name: string, email: string, password: string) => {
   const response = await api.post<AuthResponse>('/auth/register', { name, email, password });
@@ -23,14 +23,14 @@ export const registerUser = async (name: string, email: string, password: string
 };
 
 
-// 1. Login Function
+// Login Function
 //http://localhost:4000/api/v1/auth/login
 export const loginUser = async (email: string, password: string) => {
   const response = await api.post<AuthResponse>('/auth/login', { email, password });
   return response.data;
 };
 
-// 2. Refresh Token Function (Called by the Interceptor)
+// Refresh Token Function (Called by the Interceptor)
 // We use a separate axios instance or direct url to avoid interceptor loops
 export const refreshTokens = async (refreshToken: string) => {
   const response = await axios.post('http://localhost:4000/api/v1/auth/refresh-token', { 

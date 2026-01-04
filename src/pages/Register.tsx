@@ -18,7 +18,7 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 1. Standard Register Handler
+  // Standard Register Handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -35,7 +35,7 @@ const Register = () => {
     }
   };
 
-  // 2. Google Success Handler
+  // Google Success Handler
   const handleGoogleSuccess = async (credentialResponse: any) => {
     try {
         const data = await googleAuthenticate(credentialResponse.credential);

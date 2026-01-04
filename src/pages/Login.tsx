@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google'; // Import Google Component
+import { GoogleLogin } from '@react-oauth/google'; 
 import { loginSuccess } from '../redux/action/authAction'; 
 import { FaLayerGroup } from 'react-icons/fa';
-import { loginUser, googleAuthenticate } from '../services/auth'; // Import googleAuthenticate
+import { loginUser, googleAuthenticate } from '../services/auth'; 
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +15,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 1. Standard Login
+  //Standard Login
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -40,11 +40,11 @@ const Login = () => {
     }
   };
 
-  // 2. Google Login Handler
+  // Google Login Handler
   const handleGoogleSuccess = async (credentialResponse: any) => {
       try {
           setIsLoading(true);
-          // Send the ID Token to your backend
+          // Send the ID Token to backend
           const data = await googleAuthenticate(credentialResponse.credential);
           
           // Save to Redux

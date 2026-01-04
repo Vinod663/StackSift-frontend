@@ -14,7 +14,7 @@ interface CardProps {
   onEdit?: (id: string) => void;
   
   isBookmarked?: boolean; // Checks if saved in ANY folder
-  onBookmarkChange?: () => void; // To refresh the dashboard after saving
+  onBookmarkChange?: () => void; 
   isAi?: boolean;
 }
 
@@ -94,7 +94,6 @@ const WebsiteCard = ({ data, onLike, onApprove, onView, onDelete, onEdit, isBook
                   </button>
 
                   {/* --- CHANGED: Bookmark Button --- */}
-                  {/* //check if the card is Ai generated, if so, disable the bookmark button and color transition to cyan */}
                   <button 
                      disabled={isAi}
                      onClick={() => setIsModalOpen(true)}
@@ -103,7 +102,7 @@ const WebsiteCard = ({ data, onLike, onApprove, onView, onDelete, onEdit, isBook
                         isAi ? 'opacity-50 cursor-not-allowed' : ''
                      } ${
                         isBookmarked 
-                        ? 'text-brand-secondary' // Highlight color (e.g., Cyan/Blue)
+                        ? 'text-brand-secondary' // Highlight color 
                         : 'hover:text-brand-secondary text-gray-500'
                      }`}
                      title={isBookmarked ? "Saved (Click to add to another folder)" : "Save to Collection"}
@@ -153,7 +152,7 @@ const WebsiteCard = ({ data, onLike, onApprove, onView, onDelete, onEdit, isBook
       {/* Modal */}
       <AddToCollectionModal 
         isOpen={isModalOpen} 
-        onClose={handleModalClose} // Use the new handler
+        onClose={handleModalClose} 
         websiteId={data._id} 
       />
     </>

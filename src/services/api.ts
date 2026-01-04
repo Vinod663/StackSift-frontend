@@ -33,7 +33,6 @@ api.interceptors.response.use(
   async (err: AxiosError) => {
     const originalRequest: any = err.config;
 
-    // Check if error is 401 (Unauthorized) and we haven't retried yet
     if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // Mark as retried
       

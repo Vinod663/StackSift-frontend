@@ -24,7 +24,6 @@ const AdminDashboard = () => {
     try {
       const approvedParam = filterMode === 'pending' ? 'false' : undefined;
       
-      // Pass 'search' to the service (it was empty '' before)
       const data = await getWebsites(search, '', page, 9, approvedParam); 
       
       setWebsites(data.websites);
@@ -38,7 +37,6 @@ const AdminDashboard = () => {
 
   // Trigger fetch when Page, Filter, OR Search changes
   useEffect(() => {
-    // Debounce search (wait 500ms)
     const timer = setTimeout(() => {
         fetchAdminData();
     }, 500);
@@ -101,7 +99,7 @@ const AdminDashboard = () => {
         {/* Controls: Search + Tabs */}
         <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
             
-            {/* NEW: Admin Search Bar */}
+            {/*Admin Search Bar */}
             <div className="relative flex-grow sm:w-64">
                 <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                 <input 

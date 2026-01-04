@@ -55,8 +55,7 @@ const Layout = () => {
                 </Link>
 
                 {/* 2. DESKTOP CENTER DOCK */}
-                {/* CHANGED: 'hidden md:flex' -> 'hidden lg:flex' 
-                    This ensures these links hide on tablets (under 1024px) to save space */}
+                
                 <div className="hidden lg:flex items-center gap-1 bg-white/5 border border-white/5 p-1.5 rounded-full backdrop-blur-md">
                     <Link to="/dashboard" className={getLinkClass('/dashboard')}> <FaCompass /> Discover </Link>
                     <Link to="/bookmarks" className={getLinkClass('/bookmarks')}> <FaBookmark /> Collections </Link>
@@ -70,7 +69,6 @@ const Layout = () => {
                 {/* 3. Right Side Actions */}
                 <div className="flex items-center gap-3">
                     {/* Submit Button (Desktop) */}
-                    {/* CHANGED: 'hidden sm:flex' -> 'hidden lg:flex' so it moves to menu on tablets */}
                     <Link to="/submit" className="hidden lg:flex items-center gap-2 bg-gradient-to-r from-brand-primary/10 to-brand-secondary/10 hover:from-brand-primary/20 hover:to-brand-secondary/20 text-brand-primary border border-brand-primary/20 px-4 py-2 rounded-lg transition-all text-sm font-bold">
                         <FaPlus /> <span>Submit Tool</span>
                     </Link>
@@ -78,7 +76,7 @@ const Layout = () => {
                     <div className="h-8 w-px bg-white/10 mx-1 hidden lg:block"></div>
 
                     {/* Profile Link (Desktop) */}
-                    {/* CHANGED: 'hidden sm:flex' -> 'hidden lg:flex' */}
+                
                     <Link to="/profile" className="hidden lg:flex items-center gap-3 pl-2 hover:bg-white/5 p-2 rounded-xl transition-all cursor-pointer group">
                         <div className="text-right"> 
                             <p className="text-sm font-medium text-white leading-none group-hover:text-brand-primary transition-colors">
@@ -98,7 +96,7 @@ const Layout = () => {
                         </div>
                     </Link>
 
-                    {/* --- NEW ADDITION: DESKTOP LOGOUT BUTTON --- */}
+                  
                     {/* Only visible on Large screens (Desktop/Laptop) */}
                     <button 
                         onClick={handleLogout}
@@ -109,8 +107,7 @@ const Layout = () => {
                     </button>
 
                     {/* Mobile Menu Button (Hamburger) */}
-                    {/* CHANGED: 'md:hidden' -> 'lg:hidden' 
-                        This means the hamburger appears on EVERYTHING smaller than 1024px */}
+                    
                     <button 
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         className="lg:hidden p-3 text-gray-400 hover:text-white bg-white/5 rounded-xl border border-white/5 transition-all"
@@ -121,7 +118,7 @@ const Layout = () => {
             </div>
 
             {/* --- MOBILE/TABLET MENU DROPDOWN --- */}
-            {/* Only shows when isMobileMenuOpen is true AND screen is < 1024px */}
+            
             {isMobileMenuOpen && (
                 <div className="lg:hidden mt-4 pt-4 border-t border-white/5 flex flex-col gap-2 animate-fade-in-down">
                     

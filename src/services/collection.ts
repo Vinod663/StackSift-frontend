@@ -4,7 +4,7 @@ import { type Website } from './website';
 export interface Collection {
     _id: string;
     name: string;
-    websites: Website[]; // Because we populated it in backend
+    websites: Website[]; 
     createdAt: string;
 }
 

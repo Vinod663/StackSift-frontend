@@ -89,7 +89,7 @@ const Bookmarks = () => {
                 </div>
             )}
 
-            {/* View 2: Inside a Folder */}
+            {/* Inside a Folder */}
             {selectedFolder && (
                 <div>
                     <button 

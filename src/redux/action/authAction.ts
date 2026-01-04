@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 
-// Define the shape of the User object so TypeScript knows what data we have
+// Define the shape of the User object 
 export interface User {
     id: string;
     name: string;
@@ -11,9 +11,8 @@ export interface User {
     bio?: string;
 }
 
-// 1. Action to save user data when they log in
-// We expect a payload containing { user, token }
+// Action to save user data when they log in
 export const loginSuccess = createAction<{ user: User; token: string; refreshToken: string }>('auth/loginSuccess');
 
-// 2. Action to clear data when they log out
+// Action to clear data when they log out
 export const logout = createAction('auth/logout');

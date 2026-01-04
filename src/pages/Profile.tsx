@@ -5,7 +5,7 @@ import { loginSuccess } from '../redux/action/authAction';
 import { updateUserProfile, uploadUserAvatar, fetchUserStats, checkPassword } from '../services/auth'; 
 import { FaCamera, FaUser, FaEnvelope, FaSave, FaPen, FaLayerGroup, FaLock, FaTimes, FaImage, FaCheck } from 'react-icons/fa';
 
-// --- 1. CONFIG: Cover Templates ---
+// Cover Templates ---
 const COVER_TEMPLATES = [
     // 1. Classic Gradients
     { 
@@ -66,7 +66,7 @@ const Profile = () => {
   const [stats, setStats] = useState({ tools: 0, collections: 0 });
   const [password, setPassword] = useState(''); 
   
-  // New State for Cover
+  // State for Cover
   const [currentCover, setCurrentCover] = useState(user?.coverGradient || 'default');
 
   const [isEditing, setIsEditing] = useState(false);
@@ -99,8 +99,7 @@ const Profile = () => {
   const handleSelectCover = async (templateId: string) => {
       setIsLoading(true);
       try {
-          // Pass the new cover to the update function
-          // We keep name/bio as they are currently in state
+          
           const data = await updateUserProfile(name, bio, "", templateId);
           
           if (token && refreshToken) {
@@ -108,7 +107,7 @@ const Profile = () => {
           }
           setCurrentCover(templateId);
           setShowCoverModal(false);
-          // alert("Cover updated!"); // Optional: Feedback
+          // alert("Cover updated!"); 
       } catch (error) {
           console.error("Cover update failed", error);
       } finally {
@@ -145,7 +144,6 @@ const Profile = () => {
   const handleSaveProfile = async () => {
     setIsLoading(true);
     try {
-      // Pass currentCover to persist it (or just undefined to keep existing)
       const data = await updateUserProfile(name, bio, password);
       
       if (token && refreshToken) {
@@ -233,7 +231,6 @@ const Profile = () => {
       )}
 
       {/* --- VERIFICATION MODAL (Existing) --- */}
-      {/* ... (Keep your existing verification modal code here) ... */}
       {showVerifyModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
               <div className="bg-[#0f1115] border border-white/10 p-6 rounded-2xl w-full max-w-sm shadow-2xl animate-scale-up">
@@ -273,7 +270,6 @@ const Profile = () => {
         {/* Cover Banner (DYNAMIC CLASS) */}
         <div className={`h-32 md:h-48 w-full rounded-3xl border border-white/5 backdrop-blur-3xl overflow-hidden transition-all duration-700 ${getCoverClass(currentCover)}`}>
          
-         {/* OPTIONAL: Only show the 'cubes' texture for the 'default' or simple gradient themes */}
          {['default', 'neon-dusk', 'aurora'].includes(currentCover) && (
              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
          )}

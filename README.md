@@ -80,4 +80,4 @@ StackSift provides developers with an intelligent interface to discover, organiz
 
 ## Deployment
 
-* **Frontend URL:** [Insert Deployed Frontend URL Here]
+* **Frontend URL:** https://stacksift-frontend.vercel.app

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FaSearch, FaSpinner } from 'react-icons/fa'; 
+import { FaSearch, FaSpinner, FaTimes } from 'react-icons/fa'; 
 import { getWebsites, likeWebsite, approveWebsite, viewWebsite, searchWebsitesAI, type Website } from '../services/website';
 import WebsiteCard from '../components/WebsiteCard';
 import { getCollections } from '../services/collection'; 
@@ -163,6 +163,12 @@ const Dashboard = () => {
     setPage(1); 
   };
 
+
+  const handleClearSearch = () => {
+      setSearch(''); // Clear text
+      setPage(1);    // Reset to page 1
+  };
+
   return (
     <div className="space-y-8 pb-10">
       
@@ -174,15 +180,28 @@ const Dashboard = () => {
         </div>
 
         {/* Search Bar */}
-        <div className="relative w-full md:w-96">
+       <div className="relative w-full md:w-96">
             <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" />
+            
             <input 
                 type="text" 
                 placeholder="Search tools..." 
                 value={search}
                 onChange={handleSearchChange}
-                className="w-full bg-brand-dark/50 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-brand-primary transition-colors"
+                // Changed 'pr-4' to 'pr-10' so text doesn't overlap the X icon
+                className="w-full bg-brand-dark/50 border border-white/10 rounded-xl py-3 pl-10 pr-10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-primary transition-colors"
             />
+
+            {/* Conditionally render the Clear Icon if search has text */}
+            {search && (
+                <button 
+                    title='clear'
+                    onClick={handleClearSearch}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors p-1"
+                >
+                    <FaTimes />
+                </button>
+            )}
         </div>
       </div>
         

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaSearch, FaBook, FaBars, FaTimes, FaChevronRight, FaLightbulb, FaShieldAlt, FaDatabase, FaServer, FaReact, FaFolderOpen, FaGoogle, FaUserCircle } from 'react-icons/fa';
+import { FaSearch, FaBook, FaBars, FaTimes, FaChevronRight, FaLightbulb, FaShieldAlt, FaDatabase, FaServer, FaReact, FaFolderOpen, FaGoogle, FaUserCircle, FaEnvelope } from 'react-icons/fa';
 
 const Docs = () => {
   const [activeSection, setActiveSection] = useState('intro');
@@ -210,26 +210,40 @@ const Docs = () => {
                 <h2 className="text-3xl font-bold text-white flex items-center gap-3">
                     <span className="text-brand-primary">03.</span> Configuration
                 </h2>
-                <p className="text-gray-400">Create a <code className="text-brand-primary bg-brand-primary/10 px-1 rounded">.env</code> file in your backend root directory.</p>
-                <div className="bg-[#0d1117] border border-white/10 rounded-xl p-5 font-mono text-sm text-gray-300">
-                    <p className="text-gray-500 text-xs py-1"># Core Config</p>
-                    <p><span className="text-purple-400">PORT</span>=4000</p>
-                    <p><span className="text-purple-400">MONGO_URI</span>=mongodb+srv://&lt;user&gt;:&lt;pass&gt;@cluster.mongodb.net/stacksift</p>
-                    <br/>
-                    <p className="text-gray-500 text-xs py-1"># Auth & Security</p>
-                    <p><span className="text-purple-400">JWT_SECRET</span>=your_jwt_secret</p>
-                    <p><span className="text-purple-400">REFRESH_TOKEN_SECRET</span>=your_refresh_secret</p>
-                    <p><span className="text-purple-400">GOOGLE_CLIENT_ID</span>=your_google_id_here</p>
-                    <br/>
-                    <p className="text-gray-500 text-xs py-1"># AI & Cloud Services</p>
-                    <p><span className="text-purple-400">GEMINI_API_KEY</span>=AIzaSy_YOUR_API_KEY</p>
-                    <p><span className="text-purple-400">CLOUDINARY_CLOUD_NAME</span>=your_cloud_name</p>
-                    <p><span className="text-purple-400">CLOUDINARY_API_KEY</span>=your_api_key</p>
-                    <p><span className="text-purple-400">CLOUDINARY_API_SECRET</span>=your_api_secret</p>
-                    <br/>
-                    <p className="text-gray-500 text-xs py-1"># Email Support</p>
-                    <p><span className="text-purple-400">MAIL_USER</span>=your_gmail@gmail.com</p>
-                    <p><span className="text-purple-400">MAIL_PASS</span>=your_app_password</p>
+                <p className="text-gray-400">Create a <code className="text-brand-primary bg-brand-primary/10 px-1 rounded">.env</code> file in your backend and frontend roots.</p>
+                
+                {/* BACKEND CONFIG */}
+                <div className="mb-6">
+                    <h4 className="text-sm font-bold text-gray-300 mb-2">Backend (.env)</h4>
+                    <div className="bg-[#0d1117] border border-white/10 rounded-xl p-5 font-mono text-sm text-gray-300">
+                        <p className="text-gray-500 text-xs py-1"># Core Config</p>
+                        <p><span className="text-purple-400">PORT</span>=4000</p>
+                        <p><span className="text-purple-400">MONGO_URI</span>=mongodb+srv://...</p>
+                        <br/>
+                        <p className="text-gray-500 text-xs py-1"># Auth & Security</p>
+                        <p><span className="text-purple-400">JWT_SECRET</span>=your_jwt_secret</p>
+                        <p><span className="text-purple-400">REFRESH_TOKEN_SECRET</span>=your_refresh_secret</p>
+                        <p><span className="text-purple-400">GOOGLE_CLIENT_ID</span>=your_google_id</p>
+                        <br/>
+                        <p className="text-gray-500 text-xs py-1"># AI & Cloud Services</p>
+                        <p><span className="text-purple-400">GEMINI_API_KEY</span>=AIzaSy_YOUR_API_KEY</p>
+                        <p><span className="text-purple-400">CLOUDINARY_CLOUD_NAME</span>=your_cloud_name</p>
+                        <br/>
+                        <p className="text-gray-500 text-xs py-1"># Email Service (Resend)</p>
+                        <p><span className="text-purple-400">RESEND_API_KEY</span>=re_123456789...</p>
+                    </div>
+                </div>
+
+                {/* FRONTEND CONFIG */}
+                <div>
+                    <h4 className="text-sm font-bold text-gray-300 mb-2">Frontend (.env)</h4>
+                    <div className="bg-[#0d1117] border border-white/10 rounded-xl p-5 font-mono text-sm text-gray-300">
+                        <p className="text-gray-500 text-xs py-1"># API Connection (Local or Render URL)</p>
+                        <p><span className="text-purple-400">VITE_API_BASE_URL</span>=https://stacksift-api.onrender.com/api/v1</p>
+                        <br/>
+                        <p className="text-gray-500 text-xs py-1"># Google Auth</p>
+                        <p><span className="text-purple-400">VITE_GOOGLE_CLIENT_ID</span>=your_google_id</p>
+                    </div>
                 </div>
             </section>
 
@@ -331,7 +345,7 @@ const Docs = () => {
                     <span className="text-brand-primary">08.</span> API Reference
                 </h2>
                 <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                    <p className="text-gray-400 text-sm mb-6">Base URL: <code className="bg-black/30 px-2 py-1 rounded text-white">http://localhost:4000/api/v1</code></p>
+                    <p className="text-gray-400 text-sm mb-6">Base URL: <code className="bg-black/30 px-2 py-1 rounded text-white">https://stacksift-api.onrender.com/api/v1</code></p>
                     
                     {/* OVERVIEW */}
                     <div id="api-overview" className="mb-8">
@@ -379,7 +393,7 @@ const Docs = () => {
                     {/* OTHER ENDPOINTS */}
                     <div id="api-other" className="mb-8">
                         <h3 className="text-lg font-bold text-white mb-4 border-l-4 border-gray-500 pl-3">Support</h3>
-                        <ApiEndpoint method="POST" path="/contact" desc="Send a support email via NodeMailer." params="Body: { name, email, subject, message }" />
+                        <ApiEndpoint method="POST" path="/contact" desc="Send a support email via Resend API (System)." params="Body: { name, email, subject, message }" />
                     </div>
                 </div>
             </section>

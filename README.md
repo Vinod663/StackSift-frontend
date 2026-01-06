@@ -14,6 +14,7 @@ StackSift provides developers with an intelligent interface to discover, organiz
     * Real-time contribution statistics.
     * Secure "Sudo Mode" for sensitive data editing.
 * **Interactive Documentation:** A built-in documentation page to help users navigate the API and features.
+* **Support System:** Integrated contact form connecting to the backend Resend service.
 
 ## Technologies & Tools
 
@@ -23,6 +24,7 @@ StackSift provides developers with an intelligent interface to discover, organiz
 * **Routing:** React Router DOM
 * **Authentication:** @react-oauth/google, Axios Interceptors
 * **Icons:** React Icons
+* **Email Integration:** EmailJS (Client-side fallback) / API Integration
 
 ## Prerequisites
 
@@ -47,7 +49,13 @@ StackSift provides developers with an intelligent interface to discover, organiz
     > **Note:** Do not commit this file to version control.
 
     ```env
+    # Google Auth
     VITE_GOOGLE_CLIENT_ID=your_google_client_id_from_cloud_console
+
+    # Backend API Connection
+    # Leave this blank for local development to use localhost:4000 via fallback
+    # For production (Vercel), set this to your Render URL
+    VITE_API_BASE_URL=[https://stacksift-api.onrender.com/api/v1](https://stacksift-api.onrender.com/api/v1)
     ```
 
 4.  **Run the application:**
@@ -58,7 +66,7 @@ StackSift provides developers with an intelligent interface to discover, organiz
 
 ## Application Architecture
 
-* **`/src/pages`**: Contains main view components (Dashboard, Profile, Login, Docs).
+* **`/src/pages`**: Contains main view components (Dashboard, Profile, Login, Docs, Support).
 * **`/src/components`**: Reusable UI elements (Navbar, ToolCards, Modals).
 * **`/src/redux`**: Redux slices for global state (Authentication, UI state).
 * **`/src/services`**: Axios instances and API call abstractions.
@@ -81,3 +89,8 @@ StackSift provides developers with an intelligent interface to discover, organiz
 ## Deployment
 
 * **Frontend URL:** https://stacksift-frontend.vercel.app
+* **Platform:** Vercel
+
+### Important Deployment Notes
+1.  **SPA Routing:** A `vercel.json` file is included in the root to handle client-side routing (rewriting all requests to `index.html`). This prevents 404 errors on page refresh.
+2.  **Environment Variables:** Ensure `VITE_API_BASE_URL` is set in the Vercel Project Settings to point to the live Render backend.

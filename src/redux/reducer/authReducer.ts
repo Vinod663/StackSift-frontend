@@ -31,7 +31,7 @@ export const authReducer = createReducer(initialState, (builder) => {
             // Save to browser storage
             localStorage.setItem('user', JSON.stringify(action.payload.user));
             localStorage.setItem('token', action.payload.token);
-            localStorage.setItem('refreshToken', action.payload.refreshToken);
+            //localStorage.setItem('refreshToken', action.payload.refreshToken);
         })
         
         // Handle Logout
@@ -43,7 +43,7 @@ export const authReducer = createReducer(initialState, (builder) => {
             // Clear browser storage
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-            localStorage.removeItem('refreshToken');
+           // localStorage.removeItem('refreshToken');
         });
 
 });

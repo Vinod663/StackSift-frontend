@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FaSearch, FaBook, FaBars, FaTimes, FaChevronRight, FaLightbulb, FaShieldAlt, FaDatabase, FaServer, FaReact, FaFolderOpen, FaGoogle, FaUserCircle, FaEnvelope } from 'react-icons/fa';
+import { FaSearch, FaBook, FaBars, FaTimes, FaChevronRight, FaLightbulb, FaShieldAlt, FaDatabase, FaServer, FaReact, FaFolderOpen, FaGoogle, FaUserCircle } from 'react-icons/fa';
 
 const Docs = () => {
   const [activeSection, setActiveSection] = useState('intro');

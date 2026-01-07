@@ -26,8 +26,7 @@ const Login = () => {
       
       dispatch(loginSuccess({
         user: data.user,
-        accessToken: data.accessToken,
-        refreshToken: data.refreshToken
+        accessToken: data.accessToken
       }));
 
       navigate('/dashboard'); 
@@ -50,8 +49,7 @@ const Login = () => {
           // Save to Redux
           dispatch(loginSuccess({
               user: data.user,
-              accessToken: data.accessToken,
-              refreshToken: data.refreshToken
+              accessToken: data.accessToken
           }));
           
           navigate('/dashboard');

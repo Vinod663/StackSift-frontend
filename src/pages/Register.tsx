@@ -42,8 +42,7 @@ const Register = () => {
         
         dispatch(loginSuccess({
             user: data.user,
-            token: data.accessToken,
-            refreshToken: data.refreshToken
+            accessToken: data.accessToken
         }));
         
         navigate('/dashboard');

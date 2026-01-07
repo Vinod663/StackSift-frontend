@@ -57,7 +57,8 @@ const COVER_TEMPLATES = [
 ];
 
 const Profile = () => {
-  const { user, token, refreshToken } = useSelector((state: RootState) => state.auth);
+ 
+  const { user, accessToken } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -72,7 +73,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [showCoverModal, setShowCoverModal] = useState(false); // <--- New Modal State
+  const [showCoverModal, setShowCoverModal] = useState(false); 
   const [verifyPass, setVerifyPass] = useState('');
   const [verifyError, setVerifyError] = useState('');
   const [imgError, setImgError] = useState(false);
@@ -99,15 +100,14 @@ const Profile = () => {
   const handleSelectCover = async (templateId: string) => {
       setIsLoading(true);
       try {
-          
           const data = await updateUserProfile(name, bio, "", templateId);
           
-          if (token && refreshToken) {
-              dispatch(loginSuccess({ user: data.user, token, refreshToken }));
+          if (accessToken) {
+              
+              dispatch(loginSuccess({ user: data.user, accessToken }));
           }
           setCurrentCover(templateId);
           setShowCoverModal(false);
-          // alert("Cover updated!"); 
       } catch (error) {
           console.error("Cover update failed", error);
       } finally {
@@ -146,8 +146,9 @@ const Profile = () => {
     try {
       const data = await updateUserProfile(name, bio, password);
       
-      if (token && refreshToken) {
-         dispatch(loginSuccess({ user: data.user, token, refreshToken }));
+      if (accessToken) {
+         
+         dispatch(loginSuccess({ user: data.user, accessToken }));
       }
       setIsEditing(false);
       setPassword('');
@@ -166,8 +167,9 @@ const Profile = () => {
       setIsLoading(true);
       try {
         const data = await uploadUserAvatar(file);
-        if (token && refreshToken) {
-            dispatch(loginSuccess({ user: data.user, token, refreshToken }));
+        if (accessToken) {
+            
+            dispatch(loginSuccess({ user: data.user, accessToken }));
         }
       } catch (error) {
         console.error("Upload failed", error);
@@ -205,15 +207,10 @@ const Profile = () => {
                                   : 'border-transparent hover:border-white/30'
                               }`}
                           >
-                              {/* The Gradient Preview */}
                               <div className={`absolute inset-0 ${template.class}`}></div>
-                              
-                              {/* Label */}
                               <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition-colors">
                                   <span className="font-bold text-white text-sm drop-shadow-md">{template.name}</span>
                               </div>
-
-                              {/* Active Checkmark */}
                               {currentCover === template.id && (
                                   <div className="absolute top-2 right-2 bg-brand-primary text-white p-1 rounded-full text-xs shadow-sm">
                                       <FaCheck />
@@ -230,7 +227,7 @@ const Profile = () => {
           </div>
       )}
 
-      {/* --- VERIFICATION MODAL (Existing) --- */}
+      {/* --- VERIFICATION MODAL --- */}
       {showVerifyModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
               <div className="bg-[#0f1115] border border-white/10 p-6 rounded-2xl w-full max-w-sm shadow-2xl animate-scale-up">
@@ -267,15 +264,14 @@ const Profile = () => {
 
       {/* HEADER SECTION */}
       <div className="relative mb-24 group/banner">
-        {/* Cover Banner (DYNAMIC CLASS) */}
+        {/* Cover Banner */}
         <div className={`h-32 md:h-48 w-full rounded-3xl border border-white/5 backdrop-blur-3xl overflow-hidden transition-all duration-700 ${getCoverClass(currentCover)}`}>
-         
          {['default', 'neon-dusk', 'aurora'].includes(currentCover) && (
              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
          )}
-    </div>
+        </div>
 
-        {/* Change Cover Button (Visible on Hover) */}
+        {/* Change Cover Button */}
         <button 
             onClick={() => setShowCoverModal(true)}
             className="absolute top-4 right-4 bg-black/30 hover:bg-black/50 backdrop-blur-md text-white px-3 py-1.5 rounded-lg text-xs font-bold border border-white/10 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center gap-2"

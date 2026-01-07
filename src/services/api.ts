@@ -22,39 +22,38 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (err: AxiosError) => {
     const originalRequest: any = err.config;
 
-    // Check if error is 401 (Unauthorized) 
+    // 1. Check if the error is from the Refresh Endpoint itself
+    // If /refresh-token fails, Don't retry. LOGOUT.
+    if (originalRequest.url?.includes('/auth/refresh-token')) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+        return Promise.reject(err);
+    }
+
+    // 2. Standard 401 handling (Token Expired)
     if (err.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // Mark as retried
+      originalRequest._retry = true; 
       
       try {
-        // Stop looking in localStorage. Just call the API.
-        // The browser automatically includes the 'jwt' cookie here.
         const { data } = await api.post('/auth/refresh-token');
 
-        // Save new Access Token (Use 'accessToken' key for consistency)
         localStorage.setItem('accessToken', data.accessToken); 
-        
-        // Update header for the original request
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-        
-        // Update default headers for future requests
         api.defaults.headers.common['Authorization'] = `Bearer ${data.accessToken}`;
 
-        // Retry the original request
         return api(originalRequest);
 
       } catch (refreshErr) {
-        console.error("Session expired. Logging out.");
-        // If refresh fails (cookie expired/invalid), log them out completely
+        // If refresh fails, the "if" block at the top will catch the next 401
+        // But strictly, we should just logout here too.
         localStorage.removeItem('accessToken');
         localStorage.removeItem('user');
-        window.location.href = '/login'; // Redirect to Login page (Use /login, not /)
+        window.location.href = '/login';
         return Promise.reject(refreshErr);
       }
     }

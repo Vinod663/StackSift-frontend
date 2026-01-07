@@ -54,7 +54,7 @@ const Register = () => {
   return (
     <div className="min-h-screen bg-brand-dark flex items-center justify-center relative overflow-hidden text-white font-sans p-4">
       
-      {/* --- BACKGROUND ANIMATION (Purple/Green Theme for Register) --- */}
+      {/* --- BACKGROUND ANIMATION --- */}
       <div className="absolute top-10 left-10 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
       <div className="absolute top-10 right-10 w-72 h-72 bg-green-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
       <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-brand-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>

@@ -5,17 +5,16 @@ import type { User } from "../action/authAction";
 // Define the State Interface
 interface AuthState {
     user: User | null;
-    token: string | null;
-    refreshToken: string | null;
+    accessToken: string | null; 
     isAuthenticated: boolean;
+    
 }
 
-// Load initial state from LocalStorage (so refreshing doesn't log them out)
+// Load initial state from LocalStorage
 const initialState: AuthState = {
     user: JSON.parse(localStorage.getItem('user') || 'null'),
-    token: localStorage.getItem('token'),
-    refreshToken: localStorage.getItem('refreshToken'),
-    isAuthenticated: !!localStorage.getItem('token'),
+    accessToken: localStorage.getItem('accessToken'), 
+    isAuthenticated: !!localStorage.getItem('accessToken'),
 };
 
 export const authReducer = createReducer(initialState, (builder) => {
@@ -24,26 +23,25 @@ export const authReducer = createReducer(initialState, (builder) => {
         // Handle Login
         .addCase(loginSuccess, (state, action) => {
             state.user = action.payload.user;
-            state.token = action.payload.token;
-            state.refreshToken = action.payload.refreshToken;
+            state.accessToken = action.payload.accessToken; 
             state.isAuthenticated = true;
 
             // Save to browser storage
             localStorage.setItem('user', JSON.stringify(action.payload.user));
-            localStorage.setItem('token', action.payload.token);
-            //localStorage.setItem('refreshToken', action.payload.refreshToken);
+            
+            localStorage.setItem('accessToken', action.payload.accessToken); 
         })
         
         // Handle Logout
         .addCase(logout, (state) => {
             state.user = null;
-            state.token = null;
+            state.accessToken = null;
             state.isAuthenticated = false;
 
             // Clear browser storage
             localStorage.removeItem('user');
-            localStorage.removeItem('token');
-           // localStorage.removeItem('refreshToken');
+            
+            localStorage.removeItem('accessToken'); 
         });
 
 });

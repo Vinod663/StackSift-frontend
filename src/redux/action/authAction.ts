@@ -12,7 +12,7 @@ export interface User {
 }
 
 // Action to save user data when they log in
-export const loginSuccess = createAction<{ user: User; token: string; refreshToken: string }>('auth/loginSuccess');
+export const loginSuccess = createAction<{ user: User; accessToken: string; refreshToken: string }>('auth/loginSuccess');
 
 // Action to clear data when they log out
 export const logout = createAction('auth/logout');
